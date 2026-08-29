@@ -8,21 +8,24 @@
   <!-- Primary Meta Tags -->
   <title>Murali Kumar R | Web Developer & WordPress Developer</title>
   <meta name="title" content="Murali Kumar R | Web Developer & WordPress Developer">
-  <meta name="description" content="Portfolio of Murali Kumar R, a Web Developer and WordPress Developer specializing in responsive websites, WordPress, HTML, CSS and JavaScript.">
-  <meta name="keywords" content="Murali Kumar R, Web Developer, WordPress Developer, Elementor, HTML5, CSS3, JavaScript, Responsive Web Design, Portfolio">
+  <meta name="description" content="Portfolio of Murali Kumar R, a Web Developer and WordPress Developer specializing in responsive websites, WordPress customization, Elementor, HTML5, CSS3, and JavaScript.">
+  <meta name="keywords" content="Murali Kumar R, Web Developer, WordPress Developer, Elementor, HTML5, CSS3, JavaScript, PHP, MySQL, Responsive Web Design, Theme Customization, Developer Portfolio">
   <meta name="author" content="Murali Kumar R">
   <meta name="robots" content="index, follow">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://rmuralikumar.github.io/">
+  <meta property="og:url" content="https://rmuralikumar.vercel.app/">
   <meta property="og:title" content="Murali Kumar R | Web Developer & WordPress Developer">
-  <meta property="og:description" content="Portfolio of Murali Kumar R, a Web Developer and WordPress Developer specializing in responsive websites, WordPress, HTML, CSS and JavaScript.">
+  <meta property="og:description" content="Explore the portfolio of Murali Kumar R, featuring responsive websites, custom WordPress themes, and modern frontend interfaces.">
+  <meta property="og:image" content="assets/projects/gfs.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://rmuralikumar.vercel.app/">
   <meta property="twitter:title" content="Murali Kumar R | Web Developer & WordPress Developer">
-  <meta property="twitter:description" content="Portfolio of Murali Kumar R, a Web Developer and WordPress Developer specializing in responsive websites, WordPress, HTML, CSS and JavaScript.">
+  <meta property="twitter:description" content="Explore the portfolio of Murali Kumar R, featuring responsive websites, custom WordPress themes, and modern frontend interfaces.">
+  <meta property="twitter:image" content="assets/projects/gfs.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ffffff'/><text x='50%' y='55%' dominant-baseline='central' text-anchor='middle' fill='%23000000' font-family='sans-serif' font-weight='900' font-size='48'>M</text></svg>">
@@ -39,7 +42,7 @@
   <!-- Accessibility Skip Link -->
   <a href="#main-content" class="skip-to-content">Skip to main content</a>
 
-  <!-- Notification Toast -->
+  <!-- Notification Toast Container -->
   <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
   <!-- Background Ambient Glow & Grid -->
@@ -48,49 +51,49 @@
   <div class="grid-overlay" aria-hidden="true"></div>
 
   <!-- ============================================ -->
-  <!-- 1. NAVIGATION (NAKULA EXACT AESTHETIC)       -->
+  <!-- 1. NAVIGATION                                -->
   <!-- ============================================ -->
   <header class="site-header" id="site-header">
     <div class="container nav-container">
       
-      <!-- Brand Logo (NAKULA® Style) -->
-      <a href="#hero" class="brand-logo" aria-label="Murali Kumar R Home">
+      <!-- Brand Logo -->
+      <a href="#hero" class="brand-logo" aria-label="Murali Kumar R - Home">
         <span class="brand-title">MURALI<span class="brand-reg">®</span></span>
       </a>
 
       <!-- Header Info & Controls (Right Side) -->
       <div class="header-right-group">
         
-        <!-- Status Indicator -->
-        <div class="availability-meta">
+        <!-- Live Status Indicator -->
+        <div class="availability-meta" aria-label="Availability Status">
           <div class="status-pill">
-            <span class="pulse-dot"></span>
+            <span class="pulse-dot" aria-hidden="true"></span>
             <span class="status-text">Available for project</span>
           </div>
           <span class="status-timeline">CURRENTLY OPEN</span>
         </div>
 
         <!-- Live Clock -->
-        <div class="time-meta" id="live-time-container">
-          <span class="time-value" id="live-time">6:35 PM</span>
+        <div class="time-meta" id="live-time-container" aria-label="Current Local Time">
+          <span class="time-value" id="live-time">1:04 AM</span>
           <span class="time-zone">(GMT+5:30)</span>
         </div>
 
         <!-- Desktop Navigation Links -->
         <nav class="desktop-nav" aria-label="Main Navigation">
           <ul class="nav-list">
-            <li><a href="#hero" class="nav-link active">Home</a></li>
-            <li><a href="#about" class="nav-link">About</a></li>
-            <li><a href="#skills" class="nav-link">Skills</a></li>
-            <li><a href="#projects" class="nav-link">Projects</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li><a href="#hero" class="nav-link active">HOME</a></li>
+            <li><a href="#about" class="nav-link">ABOUT</a></li>
+            <li><a href="#skills" class="nav-link">SKILLS</a></li>
+            <li><a href="#projects" class="nav-link">PROJECTS</a></li>
+            <li><a href="#contact" class="nav-link">CONTACT</a></li>
           </ul>
         </nav>
 
         <!-- Header CTA Pill -->
         <a href="#contact" class="btn-pill nav-cta">LET'S TALK</a>
 
-        <!-- Minimal Hamburger Button -->
+        <!-- Minimal Hamburger Button (Mobile Only) -->
         <button type="button" class="mobile-toggle" id="mobile-toggle" aria-expanded="false" aria-controls="mobile-drawer" aria-label="Toggle navigation menu">
           <span class="hamburger-line line-1"></span>
           <span class="hamburger-line line-2"></span>
@@ -98,42 +101,47 @@
       </div>
 
     </div>
+  </header>
 
-    <!-- Mobile Drawer Navigation -->
-    <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
-      <div class="mobile-drawer-inner">
-        <div class="mobile-drawer-header">
-          <span class="brand-title">MURALI<span class="brand-reg">®</span></span>
-        </div>
-        <nav class="mobile-nav" aria-label="Mobile Navigation">
-          <ul class="mobile-nav-list">
-            <li><a href="#hero" class="mobile-nav-link">Home</a></li>
-            <li><a href="#about" class="mobile-nav-link">About</a></li>
-            <li><a href="#skills" class="mobile-nav-link">Skills</a></li>
-            <li><a href="#projects" class="mobile-nav-link">Projects</a></li>
-            <li><a href="#education" class="mobile-nav-link">Education</a></li>
-            <li><a href="#certifications" class="mobile-nav-link">Certifications</a></li>
-            <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
-          </ul>
-        </nav>
-        <div class="mobile-drawer-footer">
-          <a href="#contact" class="btn btn-primary btn-full mobile-cta">LET'S TALK</a>
-          <div class="mobile-socials">
-            <a href="https://github.com/rmuralikumar" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">
-              <svg class="brand-icon-github" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-            </a>
-            <a href="https://www.linkedin.com/in/rmuralikumar/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">
-              <svg class="brand-icon-linkedin" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-            </a>
-            <a href="mailto:muralicodex@gmail.com" aria-label="Email Murali Kumar R">
-              <svg class="brand-icon-gmail" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.272H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
-            </a>
-          </div>
+  <!-- Mobile Drawer Navigation -->
+  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+    <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
+    <div class="mobile-drawer-inner">
+      <div class="mobile-drawer-header">
+        <span class="brand-title">MURALI<span class="brand-reg">®</span></span>
+        <button type="button" class="mobile-drawer-close" id="mobile-drawer-close" aria-label="Close navigation menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <nav class="mobile-nav" aria-label="Mobile Navigation">
+        <ul class="mobile-nav-list">
+          <li><a href="#hero" class="mobile-nav-link">HOME</a></li>
+          <li><a href="#about" class="mobile-nav-link">ABOUT</a></li>
+          <li><a href="#skills" class="mobile-nav-link">SKILLS</a></li>
+          <li><a href="#projects" class="mobile-nav-link">PROJECTS</a></li>
+          <li><a href="#education" class="mobile-nav-link">EDUCATION</a></li>
+          <li><a href="#contact" class="mobile-nav-link">CONTACT</a></li>
+        </ul>
+      </nav>
+      <div class="mobile-drawer-footer">
+        <a href="#contact" class="btn btn-primary btn-full mobile-cta">LET'S TALK</a>
+        <div class="mobile-socials">
+          <a href="https://github.com/rmuralikumar" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">
+            <svg class="brand-icon-github" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/rmuralikumar/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">
+            <svg class="brand-icon-linkedin" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+          <a href="mailto:muralicodex@gmail.com" aria-label="Email Murali Kumar R">
+            <svg class="brand-icon-gmail" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.272H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+          </a>
         </div>
       </div>
-      <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
     </div>
-  </header>
+  </div>
 
   <!-- ============================================ -->
   <!-- MAIN CONTENT CONTAINER                       -->
@@ -146,13 +154,19 @@
     <section class="hero-section" id="hero">
       <div class="container">
         
-        <!-- Hero Header Row (Nakula Style) -->
+        <!-- Hero Header Row -->
         <div class="nakula-hero-header reveal-on-scroll">
           <div class="nakula-title-col">
             <h1 class="nakula-huge-title">MURALI</h1>
+            <p class="nakula-hero-role-headline">Web Developer & WordPress Developer</p>
             <p class="nakula-hero-subtitle">
-              A clean and responsive portfolio website for a Web Developer & WordPress Developer, building fast, modern digital experiences and custom themes.
+              I build responsive, high-performance websites and custom WordPress experiences with clean interfaces, modern frontend technologies, and a focus on usability.
             </p>
+            
+            <div class="hero-cta-group">
+              <a href="#projects" class="btn btn-primary hero-btn">VIEW MY WORK</a>
+              <a href="#contact" class="btn btn-secondary hero-btn">LET'S CONNECT</a>
+            </div>
           </div>
 
           <div class="nakula-meta-col">
@@ -165,30 +179,32 @@
               <span class="meta-val">Web Developer • WordPress</span>
             </div>
             <div class="meta-row">
-              <span class="meta-tag">(SERVICES)</span>
-              <span class="meta-val">Website • Custom Themes • Elementor</span>
+              <span class="meta-tag">(CORE TECH)</span>
+              <span class="meta-val">HTML5 • CSS3 • JS • WordPress</span>
             </div>
             <div class="meta-row">
-              <a href="#projects" class="live-action-link">
-                <span>View Projects</span>
-                <span class="arrow-up-right">↗</span>
-              </a>
+              <span class="meta-tag">(CONNECT)</span>
+              <div class="hero-social-links">
+                <a href="https://github.com/rmuralikumar" target="_blank" rel="noopener noreferrer" class="hero-social-link">GitHub ↗</a>
+                <a href="https://www.linkedin.com/in/rmuralikumar/" target="_blank" rel="noopener noreferrer" class="hero-social-link">LinkedIn ↗</a>
+                <a href="mailto:muralicodex@gmail.com" class="hero-social-link">Email ↗</a>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Hero Showcase Frame -->
+        <!-- Hero Showcase Frame (Featured Work) -->
         <div class="nakula-showcase-frame reveal-on-scroll" data-delay="150">
           <div class="showcase-inner">
             <div class="laptop-mockup-wrapper">
               <div class="laptop-bar">
-                <span class="dot-ctrl dot-r"></span>
-                <span class="dot-ctrl dot-y"></span>
-                <span class="dot-ctrl dot-g"></span>
-                <span class="laptop-url">gridform.studio.demo</span>
+                <span class="dot-ctrl dot-r" aria-hidden="true"></span>
+                <span class="dot-ctrl dot-y" aria-hidden="true"></span>
+                <span class="dot-ctrl dot-g" aria-hidden="true"></span>
+                <span class="laptop-url">Gridform Studio — Featured Project</span>
               </div>
               <div class="laptop-screen-img-box">
-                <img src="assets/projects/gfs.png" alt="Gridform Studio Featured Work Preview" class="hero-showcase-img" loading="eager">
+                <img src="assets/projects/gfs.png" alt="Gridform Studio Digital Design and Development Showcase Preview" class="hero-showcase-img" loading="eager" width="820" height="460">
               </div>
             </div>
           </div>
@@ -198,51 +214,59 @@
     </section>
 
     <!-- ============================================ -->
-    <!-- 3. ABOUT SECTION                             -->
+    <!-- 3. PROFESSIONAL SUMMARY & ABOUT SECTION       -->
     <!-- ============================================ -->
     <section class="section about-section" id="about">
       <div class="container">
         
         <div class="section-header reveal-on-scroll">
-          <span class="section-subtitle">(ABOUT ME)</span>
-          <h2 class="section-title">BIOGRAPHY</h2>
+          <span class="section-subtitle">(PROFILE & BACKGROUND)</span>
+          <h2 class="section-title">ABOUT ME</h2>
           <div class="section-divider"></div>
+        </div>
+
+        <!-- Recruiter / ATS Professional Summary Card -->
+        <div class="summary-card reveal-on-scroll">
+          <div class="summary-badge">PROFESSIONAL SUMMARY</div>
+          <p class="summary-text">
+            Web Developer and WordPress Developer with hands-on experience building responsive, user-friendly websites using <strong>HTML5</strong>, <strong>CSS3</strong>, <strong>JavaScript</strong>, <strong>WordPress</strong>, and <strong>Elementor</strong>. Proficient in theme customization, layout troubleshooting, cross-browser debugging, and foundational backend integration with <strong>PHP and MySQL</strong>. Experienced in developing distinct digital solutions—from e-commerce platforms and digital studios to agency websites—with a strict commitment to clean code, performance, and responsive usability.
+          </p>
         </div>
 
         <div class="about-grid">
           <!-- Left Column: Biography -->
           <div class="about-content reveal-on-scroll">
-            <h3 class="about-heading">Crafting seamless, high-performance web experiences from concept to deployment.</h3>
+            <h3 class="about-heading">Building clean, responsive, and purposeful web solutions.</h3>
             
             <p class="about-text">
-              I’m a Web Developer and WordPress Developer with hands-on experience creating responsive websites using WordPress, HTML5, CSS3 and JavaScript.
+              I am a Web Developer and WordPress Developer with a strong academic foundation in Computer Applications (B.Com CA, 2023–2026). My development work centers on creating clean, intuitive frontend interfaces and dependable WordPress websites.
             </p>
             
             <p class="about-text">
-              I enjoy transforming ideas into functional websites with clean layouts, responsive interfaces and user-focused experiences.
+              I have practical experience developing and customizing diverse website types, including studio landing pages, SaaS showcases, wellness platforms, and creative agency sites. I specialize in turning design requirements into fully responsive, accessible, and standards-compliant code.
             </p>
 
             <p class="about-text">
-              My experience includes developing e-commerce, agency and gym websites while working with WordPress customization, frontend development and technical debugging.
+              Passionate about continuous technical learning, I actively explore modern frontend practices, performance optimization, and AI-assisted developer workflows to deliver efficient web solutions.
             </p>
 
             <div class="about-highlights">
               <div class="highlight-item">
-                <span class="highlight-number">3+</span>
-                <span class="highlight-label">Core Web Projects</span>
+                <span class="highlight-number">5+</span>
+                <span class="highlight-label">Web & WordPress Projects</span>
               </div>
               <div class="highlight-item">
                 <span class="highlight-number">100%</span>
-                <span class="highlight-label">Responsive Standards</span>
+                <span class="highlight-label">Responsive Layouts</span>
               </div>
               <div class="highlight-item">
                 <span class="highlight-number">2026</span>
-                <span class="highlight-label">Computer Applications</span>
+                <span class="highlight-label">B.Com (Computer Applications)</span>
               </div>
             </div>
           </div>
 
-          <!-- Right Column: Interactive Developer Profile Visual -->
+          <!-- Right Column: Developer Profile Visual Card -->
           <div class="about-visual reveal-on-scroll" data-delay="200">
             <div class="profile-card">
               <div class="profile-card-header">
@@ -256,14 +280,16 @@
               </div>
 
               <div class="profile-card-body">
-                <p class="profile-badge-title">Primary Core Technologies</p>
+                <p class="profile-badge-title">Core Technologies & Stack</p>
                 <div class="tech-chip-grid">
                   <div class="tech-chip"><span class="tech-dot"></span> HTML5</div>
                   <div class="tech-chip"><span class="tech-dot"></span> CSS3</div>
                   <div class="tech-chip"><span class="tech-dot"></span> JavaScript</div>
                   <div class="tech-chip"><span class="tech-dot"></span> WordPress</div>
-                  <div class="tech-chip"><span class="tech-dot"></span> Git</div>
-                  <div class="tech-chip"><span class="tech-dot"></span> GitHub</div>
+                  <div class="tech-chip"><span class="tech-dot"></span> Elementor</div>
+                  <div class="tech-chip"><span class="tech-dot"></span> PHP</div>
+                  <div class="tech-chip"><span class="tech-dot"></span> MySQL</div>
+                  <div class="tech-chip"><span class="tech-dot"></span> Git & GitHub</div>
                 </div>
               </div>
 
@@ -281,95 +307,97 @@
     </section>
 
     <!-- ============================================ -->
-    <!-- 4. SKILLS SECTION                            -->
+    <!-- 4. TECHNICAL SKILLS SECTION                  -->
     <!-- ============================================ -->
     <section class="section skills-section" id="skills">
       <div class="container">
 
         <div class="section-header reveal-on-scroll">
-          <span class="section-subtitle">(EXPERTISE)</span>
+          <span class="section-subtitle">(CORE COMPETENCIES)</span>
           <h2 class="section-title">TECHNICAL SKILLS</h2>
           <div class="section-divider"></div>
         </div>
 
         <div class="skills-grid">
 
-          <!-- 1. Web Development -->
+          <!-- 1. Frontend Development -->
           <div class="skill-card reveal-on-scroll">
             <div class="skill-card-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="16 18 22 12 16 6"></polyline>
                 <polyline points="8 6 2 12 8 18"></polyline>
               </svg>
             </div>
-            <h3 class="skill-card-title">Web Development</h3>
+            <h3 class="skill-card-title">Frontend Development</h3>
             <ul class="skill-list">
-              <li><span class="check-bullet">✓</span> HTML5</li>
-              <li><span class="check-bullet">✓</span> CSS3</li>
-              <li><span class="check-bullet">✓</span> JavaScript</li>
-              <li><span class="check-bullet">✓</span> Responsive Web Design</li>
-              <li><span class="check-bullet">✓</span> Cross-Browser Compatibility</li>
+              <li>HTML5 (Semantic Markup)</li>
+              <li>CSS3 (Flexbox, Grid, Custom Properties)</li>
+              <li>JavaScript (ES6+, DOM Manipulation)</li>
+              <li>Responsive Web Design</li>
+              <li>Cross-Browser Compatibility</li>
             </ul>
           </div>
 
-          <!-- 2. CMS & Page Builders -->
+          <!-- 2. WordPress Development -->
           <div class="skill-card reveal-on-scroll" data-delay="100">
             <div class="skill-card-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                 <line x1="3" y1="9" x2="21" y2="9"></line>
                 <line x1="9" y1="21" x2="9" y2="9"></line>
               </svg>
             </div>
-            <h3 class="skill-card-title">CMS & Page Builders</h3>
+            <h3 class="skill-card-title">WordPress Development</h3>
             <ul class="skill-list">
-              <li><span class="check-bullet">✓</span> WordPress</li>
-              <li><span class="check-bullet">✓</span> Elementor</li>
-              <li><span class="check-bullet">✓</span> Theme Customization</li>
-              <li><span class="check-bullet">✓</span> Website Customization</li>
+              <li>WordPress CMS Setup & Architecture</li>
+              <li>Elementor Page Builder</li>
+              <li>Theme Customization & Child Themes</li>
+              <li>Website Customization & Styling</li>
+              <li>Plugin Configuration & Content Flow</li>
             </ul>
           </div>
 
-          <!-- 3. Backend Fundamentals -->
+          <!-- 3. Backend & Database Fundamentals -->
           <div class="skill-card reveal-on-scroll" data-delay="200">
             <div class="skill-card-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
                 <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
                 <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
               </svg>
             </div>
-            <h3 class="skill-card-title">Backend Fundamentals</h3>
+            <h3 class="skill-card-title">Backend & Database</h3>
             <ul class="skill-list">
-              <li><span class="check-bullet">✓</span> PHP</li>
-              <li><span class="check-bullet">✓</span> MySQL</li>
-              <li><span class="check-bullet">✓</span> API Fundamentals</li>
+              <li>PHP Programming Fundamentals</li>
+              <li>MySQL Database Queries & Structure</li>
+              <li>API Fundamentals (REST, JSON)</li>
+              <li>Form Handling & Data Processing</li>
             </ul>
           </div>
 
-          <!-- 4. Tools & Version Control -->
+          <!-- 4. Development Tools -->
           <div class="skill-card reveal-on-scroll">
             <div class="skill-card-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="18" cy="18" r="3"></circle>
                 <circle cx="6" cy="6" r="3"></circle>
                 <path d="M13 6h3a2 2 0 0 1 2 2v7"></path>
                 <line x1="6" y1="9" x2="6" y2="21"></line>
               </svg>
             </div>
-            <h3 class="skill-card-title">Tools & Version Control</h3>
+            <h3 class="skill-card-title">Development Tools</h3>
             <ul class="skill-list">
-              <li><span class="check-bullet">✓</span> Git</li>
-              <li><span class="check-bullet">✓</span> GitHub</li>
-              <li><span class="check-bullet">✓</span> VS Code</li>
-              <li><span class="check-bullet">✓</span> Chrome DevTools</li>
+              <li>Git Version Control</li>
+              <li>GitHub (Repositories & Collaboration)</li>
+              <li>VS Code (Extensions & Workflows)</li>
+              <li>Chrome DevTools (DOM, Network, Styles)</li>
             </ul>
           </div>
 
-          <!-- 5. Problem Solving -->
+          <!-- 5. Problem Solving & Quality -->
           <div class="skill-card reveal-on-scroll" data-delay="100">
             <div class="skill-card-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
@@ -377,24 +405,26 @@
             </div>
             <h3 class="skill-card-title">Problem Solving</h3>
             <ul class="skill-list">
-              <li><span class="check-bullet">✓</span> Debugging</li>
-              <li><span class="check-bullet">✓</span> Troubleshooting</li>
-              <li><span class="check-bullet">✓</span> Technical Problem-Solving</li>
+              <li>Frontend & Layout Debugging</li>
+              <li>CSS Troubleshooting & Specificity</li>
+              <li>Cross-Device Display Testing</li>
+              <li>Technical Problem-Solving</li>
             </ul>
           </div>
 
-          <!-- 6. AI & Emerging Technology -->
+          <!-- 6. AI & Modern Development -->
           <div class="skill-card reveal-on-scroll" data-delay="200">
             <div class="skill-card-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
               </svg>
             </div>
-            <h3 class="skill-card-title">AI & Emerging Tech</h3>
+            <h3 class="skill-card-title">AI & Modern Dev</h3>
             <ul class="skill-list">
-              <li><span class="check-bullet">✓</span> Generative AI</li>
-              <li><span class="check-bullet">✓</span> Prompt Engineering</li>
-              <li><span class="check-bullet">✓</span> AI-Assisted Development</li>
+              <li>Generative AI Tools for Development</li>
+              <li>Prompt Engineering for Code & Content</li>
+              <li>AI-Assisted Prototyping & Debugging</li>
+              <li>Workflow Acceleration</li>
             </ul>
           </div>
 
@@ -403,254 +433,295 @@
     </section>
 
     <!-- ============================================ -->
-    <!-- 5. SELECTED PROJECTS (NAKULA EXACT LAYOUT)   -->
+    <!-- 5. SELECTED PROJECTS SECTION                 -->
     <!-- ============================================ -->
     <section class="section projects-section" id="projects">
       <div class="container">
 
         <div class="section-header reveal-on-scroll">
-          <span class="section-subtitle">(FEATURED WORK)</span>
+          <span class="section-subtitle">(PORTFOLIO SHOWCASE)</span>
           <h2 class="section-title">SELECTED PROJECTS</h2>
           <div class="section-divider"></div>
         </div>
 
-        <div class="nakula-projects-list">
+        <!-- Project Filtering Tabs -->
+        <div class="filter-container reveal-on-scroll" role="tablist" aria-label="Project Categories">
+          <button type="button" class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All (5)</button>
+          <button type="button" class="filter-btn" data-filter="wordpress" role="tab" aria-selected="false">WordPress</button>
+          <button type="button" class="filter-btn" data-filter="frontend" role="tab" aria-selected="false">Frontend</button>
+          <button type="button" class="filter-btn" data-filter="web-dev" role="tab" aria-selected="false">Web Development</button>
+          <button type="button" class="filter-btn" data-filter="ui" role="tab" aria-selected="false">UI / Concept</button>
+        </div>
 
-          <!-- Project 01 — Gridform Studio (GFS) -->
-          <article class="nakula-project-block reveal-on-scroll">
+        <div class="nakula-projects-list" id="projects-list">
+
+          <!-- Project 01 — Gridform Studio (Featured Project) -->
+          <article class="nakula-project-block reveal-on-scroll" data-categories="web-dev wordpress frontend ui">
             <div class="nakula-project-header">
               <div class="project-title-col">
+                <div class="project-badge-featured">FEATURED PROJECT</div>
                 <h3 class="nakula-project-title">GRIDFORM STUDIO</h3>
                 <p class="nakula-project-desc">
-                  We draft, build & ship sites that hold their shape. Gridform Studio designs and builds responsive websites, brand systems and digital products for fast-growing teams.
+                  Gridform Studio is a responsive digital studio website focused on web design, brand systems, and digital products. Designed and built with a strong emphasis on clean structure, modular typography, and responsive layout fidelity.
                 </p>
+                <div class="project-tech-tags">
+                  <span class="tech-tag">HTML5</span>
+                  <span class="tech-tag">CSS3</span>
+                  <span class="tech-tag">JavaScript</span>
+                  <span class="tech-tag">WordPress</span>
+                  <span class="tech-tag">Responsive Design</span>
+                </div>
               </div>
 
               <div class="nakula-project-meta">
+                <div class="meta-row">
+                  <span class="meta-tag">(TYPE)</span>
+                  <span class="meta-val">Digital Studio / WordPress</span>
+                </div>
                 <div class="meta-row">
                   <span class="meta-tag">(YEAR)</span>
                   <span class="meta-val">2026</span>
                 </div>
                 <div class="meta-row">
-                  <span class="meta-tag">(TIMELINE)</span>
+                  <span class="meta-tag">(STATUS)</span>
                   <span class="meta-val">Featured Project</span>
                 </div>
                 <div class="meta-row">
-                  <span class="meta-tag">(SERVICES)</span>
-                  <span class="meta-val">Web Design • Digital Products • WordPress</span>
-                </div>
-                <div class="meta-row">
-                  <a href="#" class="live-action-link" aria-label="View live demo of Gridform Studio">
-                    <span>Live Website</span>
+                  <a href="#hero" class="live-action-link" aria-label="View details of Gridform Studio project">
+                    <span>View Project</span>
                     <span class="arrow-up-right">↗</span>
                   </a>
                 </div>
               </div>
             </div>
 
-            <!-- Project Frame Preview with Real Screenshot -->
+            <!-- Project Frame Preview -->
             <div class="project-frame-box">
               <div class="project-frame-inner">
                 <div class="mock-browser-bar">
-                  <span class="dot-ctrl dot-r"></span>
-                  <span class="dot-ctrl dot-y"></span>
-                  <span class="dot-ctrl dot-g"></span>
-                  <span class="mock-url">gridform.studio.demo</span>
+                  <span class="dot-ctrl dot-r" aria-hidden="true"></span>
+                  <span class="dot-ctrl dot-y" aria-hidden="true"></span>
+                  <span class="dot-ctrl dot-g" aria-hidden="true"></span>
+                  <span class="mock-url">Gridform Studio — Studio Showcase</span>
                 </div>
                 <div class="project-image-box">
-                  <img src="assets/projects/gfs.png" alt="Gridform Studio Web Design Project Preview" class="project-real-img" loading="lazy">
+                  <img src="assets/projects/gfs.png" alt="Gridform Studio Digital Design and Development Project Preview" class="project-real-img" loading="lazy" width="820" height="460">
                 </div>
               </div>
             </div>
           </article>
 
           <!-- Project 02 — Breakio -->
-          <article class="nakula-project-block reveal-on-scroll">
+          <article class="nakula-project-block reveal-on-scroll" data-categories="web-dev frontend ui">
             <div class="nakula-project-header">
               <div class="project-title-col">
                 <h3 class="nakula-project-title">BREAKIO</h3>
                 <p class="nakula-project-desc">
-                  A modern wellness and meditation web application interface crafted with responsive layouts, clean navigation, and focused user onboarding flow.
+                  A modern wellness and meditation web interface designed with responsive layouts, clear navigation, and a focused onboarding experience. Built with semantic markup and flexible CSS layouts for a smooth experience across all screen sizes.
                 </p>
+                <div class="project-tech-tags">
+                  <span class="tech-tag">HTML5</span>
+                  <span class="tech-tag">CSS3</span>
+                  <span class="tech-tag">JavaScript</span>
+                  <span class="tech-tag">Responsive Web Design</span>
+                </div>
               </div>
 
               <div class="nakula-project-meta">
+                <div class="meta-row">
+                  <span class="meta-tag">(TYPE)</span>
+                  <span class="meta-val">Web Interface / Frontend</span>
+                </div>
                 <div class="meta-row">
                   <span class="meta-tag">(YEAR)</span>
                   <span class="meta-val">2026</span>
                 </div>
                 <div class="meta-row">
-                  <span class="meta-tag">(TIMELINE)</span>
+                  <span class="meta-tag">(STATUS)</span>
                   <span class="meta-val">Completed</span>
                 </div>
                 <div class="meta-row">
-                  <span class="meta-tag">(SERVICES)</span>
-                  <span class="meta-val">Frontend UI • HTML5 • CSS3 • JavaScript</span>
-                </div>
-                <div class="meta-row">
-                  <a href="#" class="live-action-link" aria-label="View live demo of Breakio">
-                    <span>Live Website</span>
+                  <a href="#projects" class="live-action-link" aria-label="View details of Breakio project">
+                    <span>View Project</span>
                     <span class="arrow-up-right">↗</span>
                   </a>
                 </div>
               </div>
             </div>
 
-            <!-- Project Frame Preview with Real Screenshot -->
+            <!-- Project Frame Preview -->
             <div class="project-frame-box">
               <div class="project-frame-inner">
                 <div class="mock-browser-bar">
-                  <span class="dot-ctrl dot-r"></span>
-                  <span class="dot-ctrl dot-y"></span>
-                  <span class="dot-ctrl dot-g"></span>
-                  <span class="mock-url">breakio.app.demo</span>
+                  <span class="dot-ctrl dot-r" aria-hidden="true"></span>
+                  <span class="dot-ctrl dot-y" aria-hidden="true"></span>
+                  <span class="dot-ctrl dot-g" aria-hidden="true"></span>
+                  <span class="mock-url">Breakio — Wellness & Meditation Web Interface</span>
                 </div>
                 <div class="project-image-box">
-                  <img src="assets/projects/breakio.png" alt="Breakio Meditation Web App Project Preview" class="project-real-img" loading="lazy">
+                  <img src="assets/projects/breakio.png" alt="Breakio Meditation and Wellness Web Interface Preview" class="project-real-img" loading="lazy" width="820" height="460">
                 </div>
               </div>
             </div>
           </article>
 
           <!-- Project 03 — Grafic -->
-          <article class="nakula-project-block reveal-on-scroll">
+          <article class="nakula-project-block reveal-on-scroll" data-categories="web-dev wordpress ui">
             <div class="nakula-project-header">
               <div class="project-title-col">
                 <h3 class="nakula-project-title">GRAFIC</h3>
                 <p class="nakula-project-desc">
-                  Creative design agency platform providing unlimited design solutions for startups with interactive service showcases and modern conversion elements.
+                  A creative design agency website focused on presenting services, visual content, and conversion-oriented sections through a modern WordPress interface. Features custom layouts, organized content hierarchy, and Elementor integration.
                 </p>
+                <div class="project-tech-tags">
+                  <span class="tech-tag">WordPress</span>
+                  <span class="tech-tag">Elementor</span>
+                  <span class="tech-tag">Theme Customization</span>
+                  <span class="tech-tag">CSS3</span>
+                </div>
               </div>
 
               <div class="nakula-project-meta">
+                <div class="meta-row">
+                  <span class="meta-tag">(TYPE)</span>
+                  <span class="meta-val">Agency Website / WordPress</span>
+                </div>
                 <div class="meta-row">
                   <span class="meta-tag">(YEAR)</span>
                   <span class="meta-val">2026</span>
                 </div>
                 <div class="meta-row">
-                  <span class="meta-tag">(TIMELINE)</span>
+                  <span class="meta-tag">(STATUS)</span>
                   <span class="meta-val">Completed</span>
                 </div>
                 <div class="meta-row">
-                  <span class="meta-tag">(SERVICES)</span>
-                  <span class="meta-val">WordPress • Custom Theme • Elementor</span>
-                </div>
-                <div class="meta-row">
-                  <a href="#" class="live-action-link" aria-label="View live demo of Grafic">
-                    <span>Live Website</span>
+                  <a href="#projects" class="live-action-link" aria-label="View details of Grafic project">
+                    <span>View Project</span>
                     <span class="arrow-up-right">↗</span>
                   </a>
                 </div>
               </div>
             </div>
 
-            <!-- Project Frame Preview with Real Screenshot -->
+            <!-- Project Frame Preview -->
             <div class="project-frame-box">
               <div class="project-frame-inner">
                 <div class="mock-browser-bar">
-                  <span class="dot-ctrl dot-r"></span>
-                  <span class="dot-ctrl dot-y"></span>
-                  <span class="dot-ctrl dot-g"></span>
-                  <span class="mock-url">grafic.design.demo</span>
+                  <span class="dot-ctrl dot-r" aria-hidden="true"></span>
+                  <span class="dot-ctrl dot-y" aria-hidden="true"></span>
+                  <span class="dot-ctrl dot-g" aria-hidden="true"></span>
+                  <span class="mock-url">Grafic — Design Agency WordPress Website</span>
                 </div>
                 <div class="project-image-box">
-                  <img src="assets/projects/grafic.png" alt="Grafic Startup Design Solution Project Preview" class="project-real-img" loading="lazy">
+                  <img src="assets/projects/grafic.png" alt="Grafic Startup Creative Agency Website Preview" class="project-real-img" loading="lazy" width="820" height="460">
                 </div>
               </div>
             </div>
           </article>
 
           <!-- Project 04 — Magnifico -->
-          <article class="nakula-project-block reveal-on-scroll">
+          <article class="nakula-project-block reveal-on-scroll" data-categories="web-dev frontend ui">
             <div class="nakula-project-header">
               <div class="project-title-col">
                 <h3 class="nakula-project-title">MAGNIFICO</h3>
                 <p class="nakula-project-desc">
-                  A high-impact project management and team collaboration SaaS landing page presenting tools, integrations, and social proof with responsive fidelity.
+                  A SaaS-style project management and team collaboration landing page designed to present product features, integrations, and social proof through a responsive interface with crisp visual elements and accessible UI components.
                 </p>
+                <div class="project-tech-tags">
+                  <span class="tech-tag">HTML5</span>
+                  <span class="tech-tag">CSS3</span>
+                  <span class="tech-tag">JavaScript</span>
+                  <span class="tech-tag">Responsive Layouts</span>
+                </div>
               </div>
 
               <div class="nakula-project-meta">
+                <div class="meta-row">
+                  <span class="meta-tag">(TYPE)</span>
+                  <span class="meta-val">SaaS Landing Page / Web App</span>
+                </div>
                 <div class="meta-row">
                   <span class="meta-tag">(YEAR)</span>
                   <span class="meta-val">2026</span>
                 </div>
                 <div class="meta-row">
-                  <span class="meta-tag">(TIMELINE)</span>
+                  <span class="meta-tag">(STATUS)</span>
                   <span class="meta-val">Completed</span>
                 </div>
                 <div class="meta-row">
-                  <span class="meta-tag">(SERVICES)</span>
-                  <span class="meta-val">SaaS Web Design • Responsive Layouts</span>
-                </div>
-                <div class="meta-row">
-                  <a href="#" class="live-action-link" aria-label="View live demo of Magnifico">
-                    <span>Live Website</span>
+                  <a href="#projects" class="live-action-link" aria-label="View details of Magnifico project">
+                    <span>View Project</span>
                     <span class="arrow-up-right">↗</span>
                   </a>
                 </div>
               </div>
             </div>
 
-            <!-- Project Frame Preview with Real Screenshot -->
+            <!-- Project Frame Preview -->
             <div class="project-frame-box">
               <div class="project-frame-inner">
                 <div class="mock-browser-bar">
-                  <span class="dot-ctrl dot-r"></span>
-                  <span class="dot-ctrl dot-y"></span>
-                  <span class="dot-ctrl dot-g"></span>
-                  <span class="mock-url">magnifico.team.demo</span>
+                  <span class="dot-ctrl dot-r" aria-hidden="true"></span>
+                  <span class="dot-ctrl dot-y" aria-hidden="true"></span>
+                  <span class="dot-ctrl dot-g" aria-hidden="true"></span>
+                  <span class="mock-url">Magnifico — Team Collaboration SaaS Platform</span>
                 </div>
                 <div class="project-image-box">
-                  <img src="assets/projects/magnifico.png" alt="Magnifico Team Collaboration Project Preview" class="project-real-img" loading="lazy">
+                  <img src="assets/projects/magnifico.png" alt="Magnifico SaaS Collaboration Landing Page Preview" class="project-real-img" loading="lazy" width="820" height="460">
                 </div>
               </div>
             </div>
           </article>
 
           <!-- Project 05 — Weeb -->
-          <article class="nakula-project-block reveal-on-scroll">
+          <article class="nakula-project-block reveal-on-scroll" data-categories="web-dev frontend ui">
             <div class="nakula-project-header">
               <div class="project-title-col">
                 <h3 class="nakula-project-title">WEEB</h3>
                 <p class="nakula-project-desc">
-                  Dark-mode AI design & prototyping platform built for creators and engineers with bold typography, custom buttons, and high-performance frontend code.
+                  A dark-themed AI design and prototyping platform concept featuring bold typography, modern interface components, and responsive frontend implementation. Optimized for fast rendering and high aesthetic clarity.
                 </p>
+                <div class="project-tech-tags">
+                  <span class="tech-tag">HTML5</span>
+                  <span class="tech-tag">CSS3</span>
+                  <span class="tech-tag">JavaScript</span>
+                  <span class="tech-tag">Dark Mode UI</span>
+                </div>
               </div>
 
               <div class="nakula-project-meta">
+                <div class="meta-row">
+                  <span class="meta-tag">(TYPE)</span>
+                  <span class="meta-val">Platform Concept / Frontend</span>
+                </div>
                 <div class="meta-row">
                   <span class="meta-tag">(YEAR)</span>
                   <span class="meta-val">2026</span>
                 </div>
                 <div class="meta-row">
-                  <span class="meta-tag">(TIMELINE)</span>
+                  <span class="meta-tag">(STATUS)</span>
                   <span class="meta-val">Completed</span>
                 </div>
                 <div class="meta-row">
-                  <span class="meta-tag">(SERVICES)</span>
-                  <span class="meta-val">Modern Web Development • HTML5 • CSS3</span>
-                </div>
-                <div class="meta-row">
-                  <a href="#" class="live-action-link" aria-label="View live demo of Weeb">
-                    <span>Live Website</span>
+                  <a href="#projects" class="live-action-link" aria-label="View details of Weeb project">
+                    <span>View Project</span>
                     <span class="arrow-up-right">↗</span>
                   </a>
                 </div>
               </div>
             </div>
 
-            <!-- Project Frame Preview with Real Screenshot -->
+            <!-- Project Frame Preview -->
             <div class="project-frame-box">
               <div class="project-frame-inner">
                 <div class="mock-browser-bar">
-                  <span class="dot-ctrl dot-r"></span>
-                  <span class="dot-ctrl dot-y"></span>
-                  <span class="dot-ctrl dot-g"></span>
-                  <span class="mock-url">weeb.ai.demo</span>
+                  <span class="dot-ctrl dot-r" aria-hidden="true"></span>
+                  <span class="dot-ctrl dot-y" aria-hidden="true"></span>
+                  <span class="dot-ctrl dot-g" aria-hidden="true"></span>
+                  <span class="mock-url">Weeb — AI Design & Prototyping Platform</span>
                 </div>
                 <div class="project-image-box">
-                  <img src="assets/projects/weeb.png" alt="Weeb AI Design Platform Project Preview" class="project-real-img" loading="lazy">
+                  <img src="assets/projects/weeb.png" alt="Weeb AI Design and Prototyping Platform Preview" class="project-real-img" loading="lazy" width="820" height="460">
                 </div>
               </div>
             </div>
@@ -661,7 +732,62 @@
     </section>
 
     <!-- ============================================ -->
-    <!-- 6. EDUCATION SECTION                         -->
+    <!-- 6. SERVICES / WHAT I CAN DO SECTION          -->
+    <!-- ============================================ -->
+    <section class="section services-section" id="services">
+      <div class="container">
+
+        <div class="section-header reveal-on-scroll">
+          <span class="section-subtitle">(CAPABILITIES)</span>
+          <h2 class="section-title">WHAT I CAN DO</h2>
+          <div class="section-divider"></div>
+        </div>
+
+        <div class="services-grid">
+
+          <!-- Service 1: Website Development -->
+          <div class="service-card reveal-on-scroll">
+            <div class="service-number">01</div>
+            <h3 class="service-title">Website Development</h3>
+            <p class="service-desc">
+              Building modern, clean, and responsive websites using semantic HTML5, modern CSS3 (Grid & Flexbox), and vanilla JavaScript with cross-browser compatibility.
+            </p>
+          </div>
+
+          <!-- Service 2: WordPress Development -->
+          <div class="service-card reveal-on-scroll" data-delay="100">
+            <div class="service-number">02</div>
+            <h3 class="service-title">WordPress Development</h3>
+            <p class="service-desc">
+              Complete WordPress website development, Elementor template implementation, content structure organization, and CMS setup tailored to requirements.
+            </p>
+          </div>
+
+          <!-- Service 3: Website Customization -->
+          <div class="service-card reveal-on-scroll" data-delay="200">
+            <div class="service-number">03</div>
+            <h3 class="service-title">Website Customization</h3>
+            <p class="service-desc">
+              Enhancing existing websites with layout improvements, responsive fixes, custom styling adjustments, and cross-browser troubleshooting.
+            </p>
+          </div>
+
+          <!-- Service 4: Frontend Development -->
+          <div class="service-card reveal-on-scroll" data-delay="300">
+            <div class="service-number">04</div>
+            <h3 class="service-title">Frontend Development</h3>
+            <p class="service-desc">
+              Transforming design concepts into fast, interactive, and user-friendly web interfaces with accessible markup, clear hierarchy, and smooth interactions.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- 7. EDUCATION SECTION                         -->
     <!-- ============================================ -->
     <section class="section education-section" id="education">
       <div class="container">
@@ -689,7 +815,7 @@
               <h4 class="education-institution">Thanthai Hans Roever College (Autonomous)</h4>
               <p class="education-affiliation">Affiliated to <strong>Bharathidasan University</strong></p>
               <p class="education-notes">
-                Focused on computer applications, programming fundamentals, web technologies, and database systems.
+                Academic focus includes computer applications, programming fundamentals, web technologies, and database systems.
               </p>
             </div>
           </div>
@@ -699,68 +825,41 @@
     </section>
 
     <!-- ============================================ -->
-    <!-- 7. CERTIFICATIONS SECTION                    -->
+    <!-- 8. LEARNING & CONTINUOUS DEVELOPMENT SECTION -->
     <!-- ============================================ -->
-    <section class="section certifications-section" id="certifications">
+    <section class="section learning-section" id="learning">
       <div class="container">
 
         <div class="section-header reveal-on-scroll">
-          <span class="section-subtitle">(CREDENTIALS)</span>
-          <h2 class="section-title">CERTIFICATIONS</h2>
+          <span class="section-subtitle">(CONTINUOUS GROWTH)</span>
+          <h2 class="section-title">LEARNING & DEVELOPMENT</h2>
           <div class="section-divider"></div>
         </div>
 
-        <div class="certifications-grid">
+        <div class="learning-grid">
 
-          <!-- Certification 01 -->
-          <div class="certification-card editable-placeholder reveal-on-scroll">
-            <div class="cert-icon-wrapper">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="8" r="7"></circle>
-                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-              </svg>
-            </div>
-            <div class="cert-status-badge">Editable Card</div>
-            <h3 class="cert-title">Update Certification</h3>
-            <p class="cert-issuer">Issuing Organization</p>
-            <div class="cert-footer">
-              <span class="cert-year">(YEAR)</span>
-              <span class="cert-action">Pending Details</span>
-            </div>
+          <!-- Area 01 -->
+          <div class="learning-card reveal-on-scroll">
+            <div class="learning-tag">ACTIVE PURSUIT</div>
+            <h3 class="learning-title">Modern Frontend Architectures</h3>
+            <p class="learning-desc">Deepening proficiency in modular JavaScript, DOM performance patterns, and responsive UI systems.</p>
+            <div class="learning-focus">Focus: JavaScript (ES6+), Web Performance & Accessibility</div>
           </div>
 
-          <!-- Certification 02 -->
-          <div class="certification-card editable-placeholder reveal-on-scroll" data-delay="100">
-            <div class="cert-icon-wrapper">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="8" r="7"></circle>
-                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-              </svg>
-            </div>
-            <div class="cert-status-badge">Editable Card</div>
-            <h3 class="cert-title">Update Certification</h3>
-            <p class="cert-issuer">Issuing Organization</p>
-            <div class="cert-footer">
-              <span class="cert-year">(YEAR)</span>
-              <span class="cert-action">Pending Details</span>
-            </div>
+          <!-- Area 02 -->
+          <div class="learning-card reveal-on-scroll" data-delay="100">
+            <div class="learning-tag">ACTIVE PURSUIT</div>
+            <h3 class="learning-title">WordPress & PHP Ecosystem</h3>
+            <p class="learning-desc">Advancing theme customization techniques, template hierarchy, and PHP/MySQL database connectivity.</p>
+            <div class="learning-focus">Focus: Custom Themes, Elementor, PHP & MySQL</div>
           </div>
 
-          <!-- Certification 03 -->
-          <div class="certification-card editable-placeholder reveal-on-scroll" data-delay="200">
-            <div class="cert-icon-wrapper">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="8" r="7"></circle>
-                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-              </svg>
-            </div>
-            <div class="cert-status-badge">Editable Card</div>
-            <h3 class="cert-title">Update Certification</h3>
-            <p class="cert-issuer">Issuing Organization</p>
-            <div class="cert-footer">
-              <span class="cert-year">(YEAR)</span>
-              <span class="cert-action">Pending Details</span>
-            </div>
+          <!-- Area 03 -->
+          <div class="learning-card reveal-on-scroll" data-delay="200">
+            <div class="learning-tag">ACTIVE PURSUIT</div>
+            <h3 class="learning-title">AI-Assisted Developer Workflows</h3>
+            <p class="learning-desc">Applying generative AI tools and structured prompt engineering to streamline debugging, testing, and prototyping.</p>
+            <div class="learning-focus">Focus: Prompt Engineering, Rapid Prototyping</div>
           </div>
 
         </div>
@@ -769,7 +868,7 @@
     </section>
 
     <!-- ============================================ -->
-    <!-- 8. CONTACT SECTION                           -->
+    <!-- 9. CONTACT SECTION                           -->
     <!-- ============================================ -->
     <section class="section contact-section" id="contact">
       <div class="container">
@@ -778,7 +877,7 @@
           <span class="banner-badge">(GET IN TOUCH)</span>
           <h2 class="banner-title">LET'S BUILD SOMETHING TOGETHER</h2>
           <p class="banner-text">
-            Have a project, opportunity or idea? Let's connect and create something meaningful.
+            Have a project, opportunity, or role in mind? I'd be happy to connect and discuss how I can contribute.
           </p>
         </div>
 
@@ -788,12 +887,12 @@
           <div class="contact-info-col reveal-on-scroll">
             <h3 class="contact-subheading">CONTACT INFORMATION</h3>
             <p class="contact-info-desc">
-              Feel free to reach out via phone, email, or direct social message. I am actively open to discussing new projects and roles.
+              Feel free to reach out via phone, email, or direct social message. I am actively open to discussing developer roles, freelance projects, and collaborations.
             </p>
 
             <div class="contact-card-list">
               <!-- Phone Card -->
-              <a href="tel:9943321131" class="contact-method-card">
+              <a href="tel:9943321131" class="contact-method-card" aria-label="Call Murali Kumar R at 9943321131">
                 <div class="method-icon-box">
                   <svg class="brand-icon-phone" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
@@ -806,7 +905,7 @@
               </a>
 
               <!-- Email Card -->
-              <a href="mailto:muralicodex@gmail.com" class="contact-method-card">
+              <a href="mailto:muralicodex@gmail.com" class="contact-method-card" aria-label="Email Murali Kumar R">
                 <div class="method-icon-box">
                   <svg class="brand-icon-gmail" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.272H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
@@ -819,7 +918,7 @@
               </a>
             </div>
 
-            <!-- Social Action Buttons with Official Icons -->
+            <!-- Social Action Buttons -->
             <div class="contact-social-buttons">
               <a href="mailto:muralicodex@gmail.com" class="btn btn-secondary btn-sm contact-social-btn" aria-label="Email Murali Kumar R">
                 <svg class="brand-icon-gmail" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -846,30 +945,36 @@
           <div class="contact-form-col reveal-on-scroll" data-delay="200">
             <div class="form-wrapper">
               <h3 class="form-title">SEND A MESSAGE</h3>
-              <p class="form-subtitle">Fill in your details below and I'll respond as soon as possible.</p>
+              <p class="form-subtitle">Fill in your details below and I will respond as soon as possible.</p>
 
               <form id="contact-form" class="contact-form" novalidate>
+                <!-- Honeypot Field for Spam Protection -->
+                <div class="hp-wrapper" aria-hidden="true">
+                  <label for="_hp_website">Leave this field blank</label>
+                  <input type="text" id="_hp_website" name="_hp_website" tabindex="-1" autocomplete="off">
+                </div>
+
                 <div class="form-group">
-                  <label for="name" class="form-label">Your Name <span class="required">*</span></label>
+                  <label for="name" class="form-label">Your Name <span class="required" aria-hidden="true">*</span></label>
                   <input type="text" id="name" name="name" class="form-input" placeholder="e.g. Alex Morgan" required autocomplete="name">
                   <span class="error-msg" id="name-error" aria-live="polite"></span>
                 </div>
 
                 <div class="form-group">
-                  <label for="email" class="form-label">Your Email <span class="required">*</span></label>
+                  <label for="email" class="form-label">Your Email <span class="required" aria-hidden="true">*</span></label>
                   <input type="email" id="email" name="email" class="form-input" placeholder="e.g. alex@example.com" required autocomplete="email">
                   <span class="error-msg" id="email-error" aria-live="polite"></span>
                 </div>
 
                 <div class="form-group">
-                  <label for="subject" class="form-label">Subject <span class="required">*</span></label>
-                  <input type="text" id="subject" name="subject" class="form-input" placeholder="e.g. Project Inquiry / Opportunity" required>
+                  <label for="subject" class="form-label">Subject <span class="required" aria-hidden="true">*</span></label>
+                  <input type="text" id="subject" name="subject" class="form-input" placeholder="e.g. Project Inquiry / Role Opportunity" required>
                   <span class="error-msg" id="subject-error" aria-live="polite"></span>
                 </div>
 
                 <div class="form-group">
-                  <label for="message" class="form-label">Message <span class="required">*</span></label>
-                  <textarea id="message" name="message" class="form-textarea" rows="4" placeholder="Tell me about your project or inquiry..." required></textarea>
+                  <label for="message" class="form-label">Message <span class="required" aria-hidden="true">*</span></label>
+                  <textarea id="message" name="message" class="form-textarea" rows="4" placeholder="Tell me about your project, opportunity, or requirements..." required></textarea>
                   <span class="error-msg" id="message-error" aria-live="polite"></span>
                 </div>
 
@@ -891,13 +996,13 @@
   </main>
 
   <!-- ============================================ -->
-  <!-- 9. FOOTER                                    -->
+  <!-- 10. FOOTER                                   -->
   <!-- ============================================ -->
   <footer class="site-footer">
     <div class="container footer-container">
       <div class="footer-top">
         <div class="footer-brand">
-          <a href="#hero" class="brand-logo" aria-label="Murali Kumar R Home">
+          <a href="#hero" class="brand-logo" aria-label="Murali Kumar R - Home">
             <span class="brand-title">MURALI<span class="brand-reg">®</span></span>
           </a>
           <p class="footer-tagline">Web Developer | WordPress Developer</p>
@@ -909,6 +1014,7 @@
             <li><a href="#about">About</a></li>
             <li><a href="#skills">Skills</a></li>
             <li><a href="#projects">Projects</a></li>
+            <li><a href="#services">Services</a></li>
             <li><a href="#education">Education</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
@@ -922,9 +1028,9 @@
 
         <div class="footer-socials">
           <a href="https://www.linkedin.com/in/rmuralikumar/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">LinkedIn</a>
-          <span class="footer-dot">•</span>
+          <span class="footer-dot" aria-hidden="true">•</span>
           <a href="https://github.com/rmuralikumar" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">GitHub</a>
-          <span class="footer-dot">•</span>
+          <span class="footer-dot" aria-hidden="true">•</span>
           <a href="mailto:muralicodex@gmail.com" aria-label="Email Murali Kumar R">Email</a>
         </div>
       </div>

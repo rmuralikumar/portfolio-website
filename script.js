@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileToggle = document.getElementById('mobile-toggle');
   const mobileDrawer = document.getElementById('mobile-drawer');
   const mobileDrawerBackdrop = document.getElementById('mobile-drawer-backdrop');
+  const mobileDrawerClose = document.getElementById('mobile-drawer-close');
   const mobileNavLinks = document.querySelectorAll('.mobile-nav-link, .mobile-cta');
 
   const openMobileMenu = () => {
@@ -73,8 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   if (mobileToggle) {
-    mobileToggle.addEventListener('click', () => {
-      const isOpen = mobileDrawer.classList.contains('open');
+    mobileToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = mobileDrawer && mobileDrawer.classList.contains('open');
       if (isOpen) {
         closeMobileMenu();
       } else {
@@ -83,18 +85,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  if (mobileDrawerClose) {
+    mobileDrawerClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeMobileMenu();
+    });
+  }
+
   if (mobileDrawerBackdrop) {
     mobileDrawerBackdrop.addEventListener('click', closeMobileMenu);
   }
 
-  // Close drawer when any mobile nav link is clicked
   mobileNavLinks.forEach(link => {
-    link.addEventListener('click', closeMobileMenu);
+    link.addEventListener('click', () => {
+      closeMobileMenu();
+    });
   });
 
   // Close drawer on ESC key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && mobileDrawer && mobileDrawer.classList.contains('open')) {
+      closeMobileMenu();
+    }
+  });
+
+  // Auto-close mobile drawer on window resize to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 992 && mobileDrawer && mobileDrawer.classList.contains('open')) {
       closeMobileMenu();
     }
   });
@@ -111,6 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
         e.preventDefault();
+        
+        if (mobileDrawer && mobileDrawer.classList.contains('open')) {
+          closeMobileMenu();
+        }
+
         const headerOffset = 80;
         const elementPosition = targetElement.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
@@ -128,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --------------------------------------------------------------------------
   const sections = document.querySelectorAll('section[id]');
   const desktopNavLinks = document.querySelectorAll('.desktop-nav .nav-link');
+  const mobileDrawerNavLinks = document.querySelectorAll('.mobile-nav .mobile-nav-link');
 
   const highlightNavOnScroll = () => {
     const scrollY = window.pageYOffset;
@@ -139,18 +162,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
         desktopNavLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${sectionId}`) {
-            link.classList.add('active');
-          }
+          link.classList.toggle('active', link.getAttribute('href') === `#${sectionId}`);
+        });
+        mobileDrawerNavLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${sectionId}`);
         });
       }
     });
   };
   window.addEventListener('scroll', highlightNavOnScroll, { passive: true });
+  highlightNavOnScroll();
 
   // --------------------------------------------------------------------------
-  // 6. Scroll Reveal Animations with IntersectionObserver
+  // 6. Project Category Filtering
+  // --------------------------------------------------------------------------
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const projectBlocks = document.querySelectorAll('.nakula-project-block');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const filterValue = this.getAttribute('data-filter');
+
+      // Update active state on buttons
+      filterBtns.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      this.classList.add('active');
+      this.setAttribute('aria-selected', 'true');
+
+      // Filter project cards smoothly
+      projectBlocks.forEach(project => {
+        const categories = project.getAttribute('data-categories') || '';
+        if (filterValue === 'all' || categories.includes(filterValue)) {
+          project.classList.remove('is-filtered-out');
+        } else {
+          project.classList.add('is-filtered-out');
+        }
+      });
+    });
+  });
+
+  // --------------------------------------------------------------------------
+  // 7. Scroll Reveal Animations with IntersectionObserver
   // --------------------------------------------------------------------------
   const revealElements = document.querySelectorAll('.reveal-on-scroll');
 
@@ -177,29 +231,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     revealElements.forEach(el => revealObserver.observe(el));
   } else {
-    // Fallback if IntersectionObserver is not supported
     revealElements.forEach(el => el.classList.add('is-visible'));
   }
 
   // --------------------------------------------------------------------------
-  // 7. Toast Notification Handler
+  // 8. Singleton Toast Notification Handler (Prevents duplicate stacked toasts)
   // --------------------------------------------------------------------------
-  const showToast = (message, duration = 4000) => {
+  let activeToastTimeout = null;
+
+  const showToast = (message, type = 'success', duration = 5000) => {
     const container = document.getElementById('toast-container');
     if (!container) return;
 
+    // Clear any previous toast and timeout to ensure only ONE toast is displayed
+    if (activeToastTimeout) {
+      clearTimeout(activeToastTimeout);
+      activeToastTimeout = null;
+    }
+    container.innerHTML = '';
+
     const toast = document.createElement('div');
-    toast.className = 'toast';
+    toast.className = `toast ${type === 'error' ? 'toast-error' : ''}`;
+
+    const iconSvg = type === 'error'
+      ? `<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+           <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+         </svg>`
+      : `<svg width="20" height="20" viewBox="0 0 20 20" fill="#000000" aria-hidden="true">
+           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+         </svg>`;
+
     toast.innerHTML = `
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="#000000">
-        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-      </svg>
+      ${iconSvg}
       <span>${message}</span>
     `;
 
     container.appendChild(toast);
 
-    setTimeout(() => {
+    activeToastTimeout = setTimeout(() => {
       toast.style.opacity = '0';
       toast.style.transform = 'translateX(100%)';
       toast.style.transition = 'all 0.3s ease';
@@ -212,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // --------------------------------------------------------------------------
-  // 8. Contact Form Client-Side Validation
+  // 9. Contact Form Submission & Client-Side Validation (with Submission Lock)
   // --------------------------------------------------------------------------
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
@@ -220,16 +289,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailInput = document.getElementById('email');
     const subjectInput = document.getElementById('subject');
     const messageInput = document.getElementById('message');
+    const honeypotInput = document.getElementById('_hp_website');
+    const submitBtn = document.getElementById('submit-btn');
 
     const nameError = document.getElementById('name-error');
     const emailError = document.getElementById('email-error');
     const subjectError = document.getElementById('subject-error');
     const messageError = document.getElementById('message-error');
 
-    const validateEmail = (email) => {
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return re.test(String(email).toLowerCase());
-    };
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+
+    let isSubmitting = false;
 
     const clearErrors = () => {
       [nameInput, emailInput, subjectInput, messageInput].forEach(input => {
@@ -251,72 +321,130 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // Prevent concurrent duplicate submissions while request is in flight
+      if (isSubmitting) {
+        return;
+      }
+
       clearErrors();
+
+      const rawName = nameInput ? nameInput.value.trim() : '';
+      const rawEmail = emailInput ? emailInput.value.trim() : '';
+      const rawSubject = subjectInput ? subjectInput.value.trim() : '';
+      const rawMessage = messageInput ? messageInput.value.trim() : '';
+      const honeypot = honeypotInput ? honeypotInput.value : '';
 
       let isValid = true;
 
-      // Validate Name
-      if (!nameInput.value.trim()) {
+      // Validate Name (2 - 100 characters)
+      if (!rawName) {
         nameInput.classList.add('invalid');
         nameError.textContent = 'Please enter your name.';
         isValid = false;
-      } else if (nameInput.value.trim().length < 2) {
+      } else if (rawName.length < 2) {
         nameInput.classList.add('invalid');
         nameError.textContent = 'Name must be at least 2 characters.';
         isValid = false;
+      } else if (rawName.length > 100) {
+        nameInput.classList.add('invalid');
+        nameError.textContent = 'Name cannot exceed 100 characters.';
+        isValid = false;
       }
 
-      // Validate Email
-      if (!emailInput.value.trim()) {
+      // Validate Email (<= 254 characters and RFC 5322 regex)
+      if (!rawEmail) {
         emailInput.classList.add('invalid');
         emailError.textContent = 'Please enter your email address.';
         isValid = false;
-      } else if (!validateEmail(emailInput.value.trim())) {
+      } else if (rawEmail.length > 254 || !emailRegex.test(rawEmail)) {
         emailInput.classList.add('invalid');
         emailError.textContent = 'Please enter a valid email address.';
         isValid = false;
       }
 
-      // Validate Subject
-      if (!subjectInput.value.trim()) {
+      // Validate Subject (3 - 200 characters)
+      if (!rawSubject) {
         subjectInput.classList.add('invalid');
         subjectError.textContent = 'Please enter a subject.';
         isValid = false;
-      } else if (subjectInput.value.trim().length < 3) {
+      } else if (rawSubject.length < 3) {
         subjectInput.classList.add('invalid');
         subjectError.textContent = 'Subject must be at least 3 characters.';
         isValid = false;
+      } else if (rawSubject.length > 200) {
+        subjectInput.classList.add('invalid');
+        subjectError.textContent = 'Subject cannot exceed 200 characters.';
+        isValid = false;
       }
 
-      // Validate Message
-      if (!messageInput.value.trim()) {
+      // Validate Message (10 - 5000 characters)
+      if (!rawMessage) {
         messageInput.classList.add('invalid');
         messageError.textContent = 'Please enter your message.';
         isValid = false;
-      } else if (messageInput.value.trim().length < 10) {
+      } else if (rawMessage.length < 10) {
         messageInput.classList.add('invalid');
         messageError.textContent = 'Message must be at least 10 characters long.';
         isValid = false;
+      } else if (rawMessage.length > 5000) {
+        messageInput.classList.add('invalid');
+        messageError.textContent = 'Message cannot exceed 5000 characters.';
+        isValid = false;
       }
 
-      if (isValid) {
-        const submitBtn = document.getElementById('submit-btn');
-        const originalBtnText = submitBtn.innerHTML;
+      if (!isValid) {
+        return;
+      }
 
-        // Button sending state
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `
-          <span>Sending...</span>
-        `;
+      // Set submission lock & button sending state
+      isSubmitting = true;
+      const originalBtnHTML = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span>SENDING...</span>`;
 
-        setTimeout(() => {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalBtnText;
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            name: rawName,
+            email: rawEmail,
+            subject: rawSubject,
+            message: rawMessage,
+            _hp_website: honeypot
+          })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.success) {
           contactForm.reset();
-          showToast('Thank you! Your message has been received.');
-        }, 800);
+          showToast('Message sent successfully. Thanks for reaching out!', 'success');
+        } else {
+          // Display actual error returned by /api/contact
+          let errorMessage = data.error;
+          if (!errorMessage) {
+            if (response.status === 405) {
+              errorMessage = 'Contact API method not allowed. Please check the API configuration (run via `vercel dev` for local serverless functions).';
+            } else {
+              errorMessage = `Error ${response.status}: Failed to send message.`;
+            }
+          }
+          showToast(errorMessage, 'error', 7000);
+        }
+      } catch (err) {
+        console.error('Contact Form Fetch Error:', err);
+        showToast('Network error: Unable to connect to /api/contact. Please try again or email muralicodex@gmail.com directly.', 'error', 7000);
+      } finally {
+        isSubmitting = false;
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHTML;
       }
     });
   }

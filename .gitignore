@@ -1,2 +1,9 @@
 agent.md
 Prompt.md
+node_modules/
+.env
+.env.local
+.env.*.local
+.vercel/
+
+
