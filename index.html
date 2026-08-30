@@ -37,6 +37,9 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Cloudflare Turnstile API -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 </head>
 <body>
   <!-- Accessibility Skip Link -->
@@ -978,57 +981,17 @@
                   <span class="error-msg" id="message-error" aria-live="polite"></span>
                 </div>
 
-                <!-- Custom CAPTCHA Security Check Section -->
-                <div class="captcha-section" id="captcha-section">
-                  <div class="captcha-header">
-                    <span class="captcha-title">CAPTCHA Security check</span>
-                    <button type="button" class="captcha-link-btn" id="captcha-info-btn" aria-expanded="false" aria-controls="captcha-info-box">(what is this?)</button>
+                <!-- Official Cloudflare Turnstile Widget -->
+                <div class="turnstile-group" id="turnstile-group">
+                  <div
+                    class="cf-turnstile"
+                    id="cf-turnstile-widget"
+                    data-sitekey=""
+                    data-action="contact-form"
+                    data-theme="dark"
+                    data-size="normal">
                   </div>
-                  
-                  <div class="captcha-info-box" id="captcha-info-box" role="region" aria-label="CAPTCHA explanation" hidden>
-                    <p>Select all 3 matching images for the requested item to verify you are human before sending your message.</p>
-                  </div>
-
-                  <!-- Modern Image-Selection CAPTCHA Card -->
-                  <div class="captcha-card" id="captcha-card" role="group" aria-labelledby="captcha-challenge-title">
-                    <!-- Blue Header Section -->
-                    <div class="captcha-card-header">
-                      <span class="captcha-prompt-text">Select all images with</span>
-                      <strong class="captcha-target-name" id="captcha-challenge-title">MP40</strong>
-                      <span class="captcha-subtext">Click verify once all 3 matching images are selected.</span>
-                    </div>
-
-                    <!-- 3x3 Dynamic Image Grid -->
-                    <div class="captcha-grid-container">
-                      <div class="captcha-image-grid" id="captcha-image-grid" role="group" aria-label="CAPTCHA image selection grid">
-                        <!-- 9 randomized tiles rendered dynamically by JavaScript -->
-                      </div>
-                    </div>
-
-                    <!-- Card Footer Controls -->
-                    <div class="captcha-card-footer">
-                      <div class="captcha-footer-left">
-                        <button type="button" class="captcha-action-btn" id="captcha-refresh-btn" aria-label="Refresh challenge" title="Get a new challenge">
-                          <svg class="captcha-footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.19"/>
-                          </svg>
-                          <span>REFRESH</span>
-                        </button>
-                      </div>
-
-                      <div class="captcha-footer-center">
-                        <span class="captcha-counter-badge" id="captcha-counter-badge">0 selected</span>
-                      </div>
-
-                      <div class="captcha-footer-right">
-                        <button type="button" class="captcha-verify-btn" id="captcha-verify-btn" disabled>
-                          VERIFY
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <span class="error-msg" id="captcha-error" aria-live="polite"></span>
+                  <span class="error-msg" id="turnstile-error" aria-live="polite"></span>
                 </div>
 
                 <button type="submit" id="submit-btn" class="btn btn-primary btn-full">

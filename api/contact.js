@@ -38,12 +38,20 @@ function checkRateLimit(ip) {
  * Handles contact form submissions and delivers emails to muralicodex@gmail.com via Nodemailer and Gmail SMTP.
  */
 export default async function handler(req, res) {
-  // 1. Enforce POST method only
+  // 1. Support GET method to retrieve public Turnstile Site Key safely
+  if (req.method === 'GET') {
+    return res.status(200).json({
+      success: true,
+      siteKey: process.env.TURNSTILE_SITE_KEY || ''
+    });
+  }
+
+  // Enforce POST method for form submissions
   if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
+    res.setHeader('Allow', ['GET', 'POST']);
     return res.status(405).json({
       success: false,
-      error: 'Method Not Allowed. Only POST requests are supported.'
+      error: 'Method Not Allowed. Only GET and POST requests are supported.'
     });
   }
 
@@ -57,7 +65,20 @@ export default async function handler(req, res) {
         body = {};
       }
     }
-    const { name, email, subject, message, website, _hp_website, formStartTime, elapsedMs } = body || {};
+    const {
+      name,
+      email,
+      subject,
+      message,
+      website,
+      _hp_website,
+      formStartTime,
+      elapsedMs,
+      turnstileToken,
+      'cf-turnstile-response': cfTurnstileResponse
+    } = body || {};
+
+    const activeTurnstileToken = (turnstileToken || cfTurnstileResponse || '').trim();
 
     // 3. Honeypot Anti-Spam Check (Reject immediately if filled)
     const honeypot = (website || _hp_website || '').trim();
@@ -142,7 +163,79 @@ export default async function handler(req, res) {
       });
     }
 
-    // 4. Gmail SMTP Configuration from Environment Variables
+    // 7. Cloudflare Turnstile Server-Side Siteverify Verification
+    if (!activeTurnstileToken) {
+      console.warn('[Anti-Spam] Turnstile token is missing.');
+      return res.status(400).json({
+        success: false,
+        error: 'Please verify that you are human and try again.'
+      });
+    }
+
+    const turnstileSecret = (process.env.TURNSTILE_SECRET_KEY || '').trim();
+    if (!turnstileSecret) {
+      console.error('[Turnstile Error] TURNSTILE_SECRET_KEY environment variable is not configured.');
+      return res.status(500).json({
+        success: false,
+        error: 'Server configuration error: Turnstile verification is unavailable.'
+      });
+    }
+
+    try {
+      const verifyParams = new URLSearchParams();
+      verifyParams.append('secret', turnstileSecret);
+      verifyParams.append('response', activeTurnstileToken);
+      if (clientIp) {
+        verifyParams.append('remoteip', clientIp);
+      }
+
+      const cfResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: verifyParams.toString()
+      });
+
+      const cfData = await cfResponse.json();
+
+      // Allowed hostnames: Vercel production domain, preview domains, and local dev hosts
+      const allowedHostnames = [
+        'rmuralikumar.vercel.app',
+        'localhost',
+        '127.0.0.1',
+        '::1'
+      ];
+
+      const rawHostname = (cfData.hostname || '').toLowerCase();
+      const isHostnameAllowed =
+        allowedHostnames.includes(rawHostname) ||
+        rawHostname.endsWith('.vercel.app') ||
+        rawHostname.endsWith('.localhost');
+
+      const isActionValid = !cfData.action || cfData.action === 'contact-form';
+
+      if (!cfData.success || !isHostnameAllowed || !isActionValid) {
+        console.warn('[Turnstile Failed]', {
+          success: cfData.success,
+          hostname: cfData.hostname,
+          action: cfData.action,
+          errorCodes: cfData['error-codes']
+        });
+        return res.status(400).json({
+          success: false,
+          error: 'Human verification failed. Please try again.'
+        });
+      }
+    } catch (cfErr) {
+      console.error('[Turnstile Network Error]:', cfErr);
+      return res.status(500).json({
+        success: false,
+        error: 'Security verification failed due to network error. Please try again.'
+      });
+    }
+
+    // 8. Gmail SMTP Configuration from Environment Variables
     const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
     const smtpPort = parseInt(process.env.SMTP_PORT || '465', 10);
     const smtpSecure = process.env.SMTP_SECURE === 'false' ? false : true;

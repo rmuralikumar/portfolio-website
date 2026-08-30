@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // --------------------------------------------------------------------------
-  // 9. Contact Form Submission & Client-Side Validation (with Anti-Spam & Submission Lock)
+  // 9. Contact Form Submission & Turnstile Verification (Anti-Spam & Submission Lock)
   // --------------------------------------------------------------------------
   const formStartTime = Date.now();
   const contactForm = document.getElementById('contact-form');
@@ -297,327 +297,101 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailError = document.getElementById('email-error');
     const subjectError = document.getElementById('subject-error');
     const messageError = document.getElementById('message-error');
-
-    // CAPTCHA Elements (Modern 3x3 Image Selection Widget)
-    const captchaCard = document.getElementById('captcha-card');
-    const captchaGrid = document.getElementById('captcha-image-grid');
-    const captchaCounterBadge = document.getElementById('captcha-counter-badge');
-    const captchaRefreshBtn = document.getElementById('captcha-refresh-btn');
-    const captchaVerifyBtn = document.getElementById('captcha-verify-btn');
-    const captchaError = document.getElementById('captcha-error');
-    const captchaInfoBtn = document.getElementById('captcha-info-btn');
-    const captchaInfoBox = document.getElementById('captcha-info-box');
-
-    let isCaptchaVerified = false;
-    let currentGridTiles = [];
-
-    // Sound Synthesizer for Interactive Feedback
-    const playCaptchaTone = (freq, type, duration, vol = 0.12) => {
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-      } catch (e) {
-        // Audio optional / silent fallback
-      }
-    };
-
-    // Item Pool: MP40 Variants (Targets)
-    const mp40Pool = [
-      {
-        id: 'mp40-cobra',
-        name: 'MP40 - Predatory Cobra',
-        isTarget: true,
-        label: 'MP40 Cobra',
-        image: 'assets/captcha/mp40-cobra.png'
-      },
-      {
-        id: 'mp40-classic',
-        name: 'MP40 - Classic Tactical Steel',
-        isTarget: true,
-        label: 'MP40 Classic',
-        image: 'assets/captcha/mp40-classic.png'
-      },
-      {
-        id: 'mp40-poker',
-        name: 'MP40 - Royal Flush Spade',
-        isTarget: true,
-        label: 'MP40 Poker',
-        image: 'assets/captcha/mp40-poker.png'
-      }
-    ];
-
-    // Item Pool: Distractors (Battle Royale Non-MP40 Items)
-    const distractorPool = [
-      {
-        id: 'survivor-avatar',
-        name: 'Battle Royale Survivor',
-        isTarget: false,
-        label: 'Survivor Avatar',
-        image: 'assets/captcha/survivor-avatar.png'
-      },
-      {
-        id: 'cast-iron-pan',
-        name: 'Cast Iron Frying Pan',
-        isTarget: false,
-        label: 'Cast Iron Pan',
-        image: 'assets/captcha/cast-iron-pan.png'
-      },
-      {
-        id: 'awm-sniper',
-        name: 'AWM - Arctic Sniper',
-        isTarget: false,
-        label: 'AWM Sniper',
-        image: 'assets/captcha/awm-sniper.png'
-      },
-      {
-        id: 'field-medkit',
-        name: 'Military Field Medkit',
-        isTarget: false,
-        label: 'Field Medkit',
-        image: 'assets/captcha/field-medkit.png'
-      },
-      {
-        id: 'm416-glacier',
-        name: 'M416 - Glacier Ice Skin',
-        isTarget: false,
-        label: 'M416 Glacier',
-        image: 'assets/captcha/m416-glacier.png'
-      },
-      {
-        id: 'level-3-helmet',
-        name: 'Level 3 Spetsnaz Helmet',
-        isTarget: false,
-        label: 'Level 3 Helmet',
-        image: 'assets/captcha/level-3-helmet.png'
-      }
-    ];
-
-    // Fisher-Yates Array Shuffle Algorithm
-    const shuffleArray = (array) => {
-      const copy = [...array];
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
-      }
-      return copy;
-    };
-
-    // Update Counter text and styling & Enable/Disable Verify Button
-    const updateCaptchaCounter = () => {
-      if (!captchaCounterBadge) return;
-      const selectedCount = currentGridTiles.filter(t => t.selected).length;
-      captchaCounterBadge.textContent = `${selectedCount} selected`;
-
-      if (selectedCount === 3) {
-        captchaCounterBadge.classList.add('is-three');
-        if (captchaVerifyBtn && !isCaptchaVerified) {
-          captchaVerifyBtn.disabled = false;
-        }
-      } else {
-        captchaCounterBadge.classList.remove('is-three');
-        if (captchaVerifyBtn && !isCaptchaVerified) {
-          captchaVerifyBtn.disabled = true;
-        }
-      }
-    };
-
-    // Reset Verification State
-    const resetVerificationState = () => {
-      isCaptchaVerified = false;
-      if (captchaVerifyBtn) {
-        captchaVerifyBtn.textContent = 'VERIFY';
-        captchaVerifyBtn.classList.remove('verified');
-        const selectedCount = currentGridTiles.filter(t => t.selected).length;
-        captchaVerifyBtn.disabled = selectedCount !== 3;
-      }
-      if (captchaCard) {
-        captchaCard.classList.remove('verified');
-      }
-    };
-
-    // Initialize/Randomize the 3x3 CAPTCHA Grid
-    const generateCaptchaGrid = () => {
-      if (!captchaGrid) return;
-      captchaGrid.innerHTML = '';
-      resetVerificationState();
-
-      // 1. Pick 3 distinct random MP40 variants
-      const shuffledMP40 = shuffleArray(mp40Pool).slice(0, 3);
-
-      // 2. Pick 6 distinct random distractors
-      const shuffledDistractors = shuffleArray(distractorPool).slice(0, 6);
-
-      // 3. Combine and shuffle across all 9 slots randomly (Do NOT hardcode positions!)
-      const combinedItems = shuffleArray([...shuffledMP40, ...shuffledDistractors]);
-
-      currentGridTiles = combinedItems.map((item, index) => ({
-        ...item,
-        gridIndex: index,
-        selected: false
-      }));
-
-      // Render 9 Tiles
-      currentGridTiles.forEach((tile, index) => {
-        const tileBtn = document.createElement('button');
-        tileBtn.type = 'button';
-        tileBtn.className = 'captcha-tile';
-        tileBtn.id = `captcha-tile-${index}`;
-        tileBtn.setAttribute('role', 'checkbox');
-        tileBtn.setAttribute('aria-checked', 'false');
-        tileBtn.setAttribute('aria-label', `${tile.name}`);
-
-        tileBtn.innerHTML = `
-          <div class="tile-visual-wrapper">
-            <img class="captcha-tile-img" src="${tile.image}" alt="${tile.name}" loading="eager" decoding="async" onerror="this.parentElement.parentElement.classList.add('has-error')" />
-            <div class="tile-fallback-view" aria-hidden="true">
-              <span>⚠️ Image Missing</span>
-              <small>${tile.label}</small>
-            </div>
-            <span class="tile-badge-label">${tile.label}</span>
-          </div>
-          <div class="tile-checkmark-badge" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </div>
-        `;
-
-        tileBtn.addEventListener('click', () => {
-          toggleTile(index);
-        });
-
-        captchaGrid.appendChild(tileBtn);
-      });
-
-      updateCaptchaCounter();
-      if (captchaError) captchaError.textContent = '';
-    };
-
-    // Toggle Individual Tile Selection
-    const toggleTile = (index) => {
-      const tile = currentGridTiles[index];
-      if (!tile) return;
-
-      tile.selected = !tile.selected;
-      const tileBtn = document.getElementById(`captcha-tile-${index}`);
-      if (tileBtn) {
-        tileBtn.classList.toggle('selected', tile.selected);
-        tileBtn.setAttribute('aria-checked', tile.selected ? 'true' : 'false');
-        tileBtn.setAttribute('aria-label', `${tile.name}${tile.selected ? ', selected' : ''}`);
-      }
-
-      playCaptchaTone(tile.selected ? 580 : 420, 'sine', 0.06, 0.1);
-      updateCaptchaCounter();
-
-      // If user toggles tiles after verifying, require re-verification
-      if (isCaptchaVerified) {
-        resetVerificationState();
-      }
-
-      if (captchaError) captchaError.textContent = '';
-    };
-
-    // Verify Selection Handler
-    const verifyCaptchaSelection = () => {
-      const selectedTargets = currentGridTiles.filter(t => t.isTarget && t.selected).length;
-      const selectedNonTargets = currentGridTiles.filter(t => !t.isTarget && t.selected).length;
-      const totalSelected = currentGridTiles.filter(t => t.selected).length;
-
-      // Exactly all 3 MP40 tiles and 0 distractors
-      if (selectedTargets === 3 && selectedNonTargets === 0 && totalSelected === 3) {
-        isCaptchaVerified = true;
-        playCaptchaTone(523.25, 'triangle', 0.12, 0.15);
-        setTimeout(() => playCaptchaTone(659.25, 'triangle', 0.15, 0.15), 90);
-        setTimeout(() => playCaptchaTone(783.99, 'triangle', 0.22, 0.2), 180);
-
-        if (captchaVerifyBtn) {
-          captchaVerifyBtn.textContent = 'VERIFIED ✓';
-          captchaVerifyBtn.classList.add('verified');
-          captchaVerifyBtn.disabled = false;
-        }
-        if (captchaCard) {
-          captchaCard.classList.add('verified');
-        }
-        if (captchaError) {
-          captchaError.textContent = '';
-        }
-        return true;
-      } else {
-        isCaptchaVerified = false;
-        playCaptchaTone(240, 'sawtooth', 0.16, 0.2);
-        if (captchaCard) {
-          captchaCard.classList.remove('shake');
-          void captchaCard.offsetWidth; // Restart CSS animation
-          captchaCard.classList.add('shake');
-        }
-        if (captchaError) {
-          if (totalSelected !== 3) {
-            captchaError.textContent = `Please select exactly 3 MP40 gun images (${totalSelected} selected).`;
-          } else {
-            captchaError.textContent = 'Incorrect selection. Please ensure only the 3 MP40 weapon skins are selected.';
-          }
-        }
-        return false;
-      }
-    };
-
-    // Initial Grid Generation
-    generateCaptchaGrid();
-
-    // Event Listeners for Controls
-    if (captchaRefreshBtn) {
-      captchaRefreshBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        playCaptchaTone(460, 'sine', 0.08, 0.1);
-        captchaRefreshBtn.classList.add('rotating');
-        setTimeout(() => captchaRefreshBtn.classList.remove('rotating'), 350);
-        generateCaptchaGrid();
-      });
-    }
-
-    if (captchaVerifyBtn) {
-      captchaVerifyBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        verifyCaptchaSelection();
-      });
-    }
-
-    // Toggle "(what is this?)" info box
-    if (captchaInfoBtn && captchaInfoBox) {
-      captchaInfoBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const isHidden = captchaInfoBox.hasAttribute('hidden');
-        if (isHidden) {
-          captchaInfoBox.removeAttribute('hidden');
-          captchaInfoBtn.setAttribute('aria-expanded', 'true');
-        } else {
-          captchaInfoBox.setAttribute('hidden', '');
-          captchaInfoBtn.setAttribute('aria-expanded', 'false');
-        }
-      });
-    }
+    const turnstileError = document.getElementById('turnstile-error');
+    const turnstileGroup = document.getElementById('turnstile-group');
 
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 
     let isSubmitting = false;
+    let turnstileWidgetId = null;
+    let activeTurnstileToken = '';
+
+    // Initialize Cloudflare Turnstile
+    const setupTurnstile = async () => {
+      const widgetContainer = document.getElementById('cf-turnstile-widget');
+      if (!widgetContainer) return;
+
+      let siteKey = widgetContainer.getAttribute('data-sitekey') || window.TURNSTILE_SITE_KEY || '';
+
+      // If siteKey is not hardcoded, fetch it from the backend configuration endpoint
+      if (!siteKey) {
+        try {
+          const configRes = await fetch('/api/contact', {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' }
+          });
+          if (configRes.ok) {
+            const configData = await configRes.json();
+            if (configData && configData.siteKey) {
+              siteKey = configData.siteKey;
+            }
+          }
+        } catch (err) {
+          console.warn('[Turnstile] Could not load siteKey from /api/contact:', err);
+        }
+      }
+
+      if (!siteKey) {
+        console.warn('[Turnstile] No TURNSTILE_SITE_KEY available.');
+        return;
+      }
+
+      // Wait for Cloudflare Turnstile script to load
+      const renderWidget = () => {
+        if (window.turnstile && typeof window.turnstile.render === 'function') {
+          if (turnstileWidgetId !== null) return;
+          try {
+            turnstileWidgetId = window.turnstile.render('#cf-turnstile-widget', {
+              sitekey: siteKey,
+              action: 'contact-form',
+              theme: 'dark',
+              size: 'normal',
+              callback: (token) => {
+                activeTurnstileToken = token;
+                if (turnstileError) turnstileError.textContent = '';
+                if (turnstileGroup) turnstileGroup.classList.remove('has-error');
+              },
+              'expired-callback': () => {
+                activeTurnstileToken = '';
+                if (turnstileError) turnstileError.textContent = 'Verification expired. Please verify again.';
+              },
+              'error-callback': () => {
+                activeTurnstileToken = '';
+                if (turnstileError) turnstileError.textContent = 'Human verification encountered an issue. Please refresh.';
+              }
+            });
+          } catch (err) {
+            console.error('[Turnstile Render Error]:', err);
+          }
+        } else {
+          setTimeout(renderWidget, 100);
+        }
+      };
+
+      renderWidget();
+    };
+
+    setupTurnstile();
+
+    const resetTurnstileWidget = () => {
+      activeTurnstileToken = '';
+      if (window.turnstile && turnstileWidgetId !== null) {
+        try {
+          window.turnstile.reset(turnstileWidgetId);
+        } catch (e) {
+          console.warn('[Turnstile Reset Warning]:', e);
+        }
+      }
+    };
 
     const clearErrors = () => {
       [nameInput, emailInput, subjectInput, messageInput].forEach(input => {
         if (input) input.classList.remove('invalid');
       });
-      [nameError, emailError, subjectError, messageError, captchaError].forEach(error => {
+      [nameError, emailError, subjectError, messageError, turnstileError].forEach(error => {
         if (error) error.textContent = '';
       });
+      if (turnstileGroup) turnstileGroup.classList.remove('has-error');
     };
 
     // Real-time error removal on input
@@ -647,6 +421,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const rawMessage = messageInput ? messageInput.value.trim() : '';
       const honeypot = honeypotInput ? honeypotInput.value.trim() : '';
       const elapsedMs = Date.now() - formStartTime;
+
+      // Extract current Turnstile token
+      const currentToken = activeTurnstileToken || (
+        window.turnstile && turnstileWidgetId !== null && typeof window.turnstile.getResponse === 'function'
+          ? window.turnstile.getResponse(turnstileWidgetId)
+          : ''
+      );
 
       let isValid = true;
 
@@ -706,15 +487,15 @@ document.addEventListener('DOMContentLoaded', () => {
         isValid = false;
       }
 
-      // Validate Image CAPTCHA Verification
-      if (!isCaptchaVerified) {
-        const verifiedNow = verifyCaptchaSelection();
-        if (!verifiedNow) {
-          isValid = false;
-          if (captchaCard) {
-            captchaCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }
+      // Validate Cloudflare Turnstile Human Verification Token
+      if (!currentToken) {
+        if (turnstileError) {
+          turnstileError.textContent = 'Please verify that you are human and try again.';
         }
+        if (turnstileGroup) {
+          turnstileGroup.classList.add('has-error');
+        }
+        isValid = false;
       }
 
       if (!isValid) {
@@ -742,7 +523,9 @@ document.addEventListener('DOMContentLoaded', () => {
             website: honeypot,
             _hp_website: honeypot,
             formStartTime: formStartTime,
-            elapsedMs: elapsedMs
+            elapsedMs: elapsedMs,
+            turnstileToken: currentToken,
+            'cf-turnstile-response': currentToken
           })
         });
 
@@ -750,24 +533,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (response.ok && data.success) {
           contactForm.reset();
-          generateCaptchaGrid();
           showToast('Message sent successfully. Thanks for reaching out!', 'success');
         } else {
           // Display actual error returned by /api/contact
           let errorMessage = data.error;
           if (!errorMessage) {
             if (response.status === 405) {
-              errorMessage = 'Contact API method not allowed. Please check the API configuration (run via `vercel dev` for local serverless functions).';
+              errorMessage = 'Contact API method not allowed. Please check the API configuration.';
             } else {
               errorMessage = `Error ${response.status}: Failed to send message.`;
             }
           }
+
+          if (errorMessage.toLowerCase().includes('human verification') || errorMessage.toLowerCase().includes('turnstile')) {
+            if (turnstileError) turnstileError.textContent = 'Human verification failed. Please try again.';
+            if (turnstileGroup) turnstileGroup.classList.add('has-error');
+          }
+
           showToast(errorMessage, 'error', 7000);
         }
       } catch (err) {
         console.error('Contact Form Fetch Error:', err);
         showToast('Network error: Unable to connect to /api/contact. Please try again or email muralicodex@gmail.com directly.', 'error', 7000);
       } finally {
+        // Reset single-use Turnstile token and widget on every attempt
+        resetTurnstileWidget();
         isSubmitting = false;
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnHTML;
