@@ -135,7 +135,7 @@
           <a href="https://www.linkedin.com/in/rmuralikumar/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">
             <svg class="brand-icon-linkedin" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
           </a>
-          <a href="mailto:muralicodex@gmail.com" aria-label="Email Murali Kumar R">
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=muralicodex@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Email Murali Kumar R">
             <svg class="brand-icon-gmail" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.272H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
           </a>
         </div>
@@ -187,7 +187,7 @@
               <div class="hero-social-links">
                 <a href="https://github.com/rmuralikumar" target="_blank" rel="noopener noreferrer" class="hero-social-link">GitHub ↗</a>
                 <a href="https://www.linkedin.com/in/rmuralikumar/" target="_blank" rel="noopener noreferrer" class="hero-social-link">LinkedIn ↗</a>
-                <a href="mailto:muralicodex@gmail.com" class="hero-social-link">Email ↗</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=muralicodex@gmail.com" target="_blank" rel="noopener noreferrer" class="hero-social-link">Email ↗</a>
               </div>
             </div>
           </div>
@@ -905,7 +905,7 @@
               </a>
 
               <!-- Email Card -->
-              <a href="mailto:muralicodex@gmail.com" class="contact-method-card" aria-label="Email Murali Kumar R">
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=muralicodex@gmail.com" target="_blank" rel="noopener noreferrer" class="contact-method-card" aria-label="Email Murali Kumar R">
                 <div class="method-icon-box">
                   <svg class="brand-icon-gmail" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.272H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
@@ -920,7 +920,7 @@
 
             <!-- Social Action Buttons -->
             <div class="contact-social-buttons">
-              <a href="mailto:muralicodex@gmail.com" class="btn btn-secondary btn-sm contact-social-btn" aria-label="Email Murali Kumar R">
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=muralicodex@gmail.com" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm contact-social-btn" aria-label="Email Murali Kumar R">
                 <svg class="brand-icon-gmail" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.272H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
                 </svg>
@@ -950,8 +950,8 @@
               <form id="contact-form" class="contact-form" novalidate>
                 <!-- Honeypot Field for Spam Protection -->
                 <div class="hp-wrapper" aria-hidden="true">
-                  <label for="_hp_website">Leave this field blank</label>
-                  <input type="text" id="_hp_website" name="_hp_website" tabindex="-1" autocomplete="off">
+                  <label for="website">Leave this field blank</label>
+                  <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
                 </div>
 
                 <div class="form-group">
@@ -976,6 +976,38 @@
                   <label for="message" class="form-label">Message <span class="required" aria-hidden="true">*</span></label>
                   <textarea id="message" name="message" class="form-textarea" rows="4" placeholder="Tell me about your project, opportunity, or requirements..." required></textarea>
                   <span class="error-msg" id="message-error" aria-live="polite"></span>
+                </div>
+
+                <!-- CAPTCHA Security Check Section -->
+                <div class="captcha-section">
+                  <div class="captcha-header">
+                    <span class="captcha-title">CAPTCHA Security check</span>
+                    <button type="button" class="captcha-link-btn" id="captcha-info-btn" aria-expanded="false" aria-controls="captcha-info-box">(what is this?)</button>
+                  </div>
+                  
+                  <div class="captcha-info-box" id="captcha-info-box" role="region" aria-label="CAPTCHA explanation" hidden>
+                    <p>This security check helps verify that this message is submitted by a human rather than an automated spam bot.</p>
+                  </div>
+
+                  <div class="captcha-box">
+                    <div class="captcha-display-wrapper">
+                      <canvas id="captcha-canvas" class="captcha-canvas" width="400" height="70" role="img" aria-label="Visual CAPTCHA security code"></canvas>
+                      <button type="button" class="captcha-refresh-btn" id="captcha-refresh-btn" aria-label="Refresh CAPTCHA" title="Refresh CAPTCHA">
+                        <svg class="captcha-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8M22 12.5a10 10 0 0 1-18.8 4.3L2.5 16"/>
+                        </svg>
+                        <span>Refresh</span>
+                      </button>
+                    </div>
+
+                    <label for="captcha-input" class="sr-only">Enter the text you see on the image</label>
+                    <input type="text" id="captcha-input" name="captcha" class="form-input captcha-input" placeholder="Enter the text you see on the image" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                  </div>
+
+                  <div class="captcha-footer">
+                    <span class="captcha-footer-text">Can't see the image? <button type="button" class="captcha-link-btn captcha-request-btn" id="captcha-request-link">Request a new one</button></span>
+                  </div>
+                  <span class="error-msg" id="captcha-error" aria-live="polite"></span>
                 </div>
 
                 <button type="submit" id="submit-btn" class="btn btn-primary btn-full">
@@ -1031,7 +1063,7 @@
           <span class="footer-dot" aria-hidden="true">•</span>
           <a href="https://github.com/rmuralikumar" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile">GitHub</a>
           <span class="footer-dot" aria-hidden="true">•</span>
-          <a href="mailto:muralicodex@gmail.com" aria-label="Email Murali Kumar R">Email</a>
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=muralicodex@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Email Murali Kumar R">Email</a>
         </div>
       </div>
     </div>

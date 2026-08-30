@@ -281,15 +281,16 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // --------------------------------------------------------------------------
-  // 9. Contact Form Submission & Client-Side Validation (with Submission Lock)
+  // 9. Contact Form Submission & Client-Side Validation (with Anti-Spam & Submission Lock)
   // --------------------------------------------------------------------------
+  const formStartTime = Date.now();
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     const nameInput = document.getElementById('name');
     const emailInput = document.getElementById('email');
     const subjectInput = document.getElementById('subject');
     const messageInput = document.getElementById('message');
-    const honeypotInput = document.getElementById('_hp_website');
+    const honeypotInput = document.getElementById('website') || document.getElementById('_hp_website');
     const submitBtn = document.getElementById('submit-btn');
 
     const nameError = document.getElementById('name-error');
@@ -297,21 +298,203 @@ document.addEventListener('DOMContentLoaded', () => {
     const subjectError = document.getElementById('subject-error');
     const messageError = document.getElementById('message-error');
 
+    // CAPTCHA Elements
+    const captchaCanvas = document.getElementById('captcha-canvas');
+    const captchaInput = document.getElementById('captcha-input');
+    const captchaError = document.getElementById('captcha-error');
+    const captchaRefreshBtn = document.getElementById('captcha-refresh-btn');
+    const captchaRequestLink = document.getElementById('captcha-request-link');
+    const captchaInfoBtn = document.getElementById('captcha-info-btn');
+    const captchaInfoBox = document.getElementById('captcha-info-box');
+
+    let currentCaptchaCode = '';
+    const CHAR_SET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+
+    const generateCaptchaCode = (length = 6) => {
+      let code = '';
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * CHAR_SET.length);
+        code += CHAR_SET[randomIndex];
+      }
+      return code;
+    };
+
+    const drawCaptcha = () => {
+      if (!captchaCanvas) return;
+      const ctx = captchaCanvas.getContext('2d');
+      if (!ctx) return;
+
+      const width = 400;
+      const height = 70;
+      const dpr = window.devicePixelRatio || 1;
+
+      captchaCanvas.width = width * dpr;
+      captchaCanvas.height = height * dpr;
+      if (ctx.resetTransform) {
+        ctx.resetTransform();
+      } else {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+      }
+      ctx.scale(dpr, dpr);
+
+      // 1. Clean White Background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, width, height);
+
+      // 2. Subtle light background grid lines
+      for (let i = 0; i < 4; i++) {
+        ctx.strokeStyle = `rgba(226, 232, 240, ${Math.random() * 0.7 + 0.3})`;
+        ctx.lineWidth = Math.random() * 1.5 + 1;
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * width, Math.random() * height);
+        ctx.bezierCurveTo(
+          Math.random() * width, Math.random() * height,
+          Math.random() * width, Math.random() * height,
+          Math.random() * width, Math.random() * height
+        );
+        ctx.stroke();
+      }
+
+      // 3. Random noise speckles / dots
+      const dotCount = 70;
+      for (let i = 0; i < dotCount; i++) {
+        const x = Math.random() * width;
+        const y = Math.random() * height;
+        const radius = Math.random() * 1.4 + 0.6;
+        const isDark = Math.random() > 0.45;
+        ctx.fillStyle = isDark ? `rgba(15, 23, 42, ${Math.random() * 0.45 + 0.25})` : `rgba(148, 163, 184, ${Math.random() * 0.5 + 0.2})`;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 4. Random 2-4 distortion interference lines across the text
+      const lineCount = Math.floor(Math.random() * 3) + 2;
+      const lineColors = [
+        'rgba(30, 41, 59, 0.55)',
+        'rgba(15, 23, 42, 0.6)',
+        'rgba(51, 65, 85, 0.5)',
+        'rgba(71, 85, 105, 0.45)'
+      ];
+      for (let i = 0; i < lineCount; i++) {
+        ctx.strokeStyle = lineColors[Math.floor(Math.random() * lineColors.length)];
+        ctx.lineWidth = Math.random() * 1.5 + 1.2;
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * 30, Math.random() * height);
+        ctx.bezierCurveTo(
+          Math.random() * (width * 0.35), Math.random() * height,
+          Math.random() * (width * 0.75), Math.random() * height,
+          width - Math.random() * 30, Math.random() * height
+        );
+        ctx.stroke();
+      }
+
+      // 5. Draw 6 Dark Characters with rotations, font variations, and distortion
+      const code = currentCaptchaCode;
+      const charFonts = ['Arial', 'Verdana', 'Georgia', 'Trebuchet MS', 'Impact', 'Courier New'];
+      const charColors = ['#0a0a0c', '#18181b', '#0f172a', '#1e293b', '#1e1b4b', '#27272a'];
+
+      // Usable width leaves room on right for the refresh button overlay
+      const usableWidth = 295;
+      const startX = 25;
+      const charSpacing = usableWidth / code.length;
+
+      for (let i = 0; i < code.length; i++) {
+        const char = code[i];
+        const font = charFonts[Math.floor(Math.random() * charFonts.length)];
+        const fontSize = Math.floor(Math.random() * 6) + 30; // 30px - 35px
+        const color = charColors[Math.floor(Math.random() * charColors.length)];
+        const rotationAngle = (Math.random() * 0.5 - 0.25); // ~ -14deg to +14deg
+        const x = startX + (i * charSpacing) + (Math.random() * 6 - 3);
+        const y = 46 + (Math.random() * 8 - 4);
+
+        ctx.save();
+        ctx.font = `bold ${fontSize}px ${font}, sans-serif`;
+        ctx.fillStyle = color;
+        ctx.textBaseline = 'alphabetic';
+        ctx.translate(x, y);
+        ctx.rotate(rotationAngle);
+
+        const skewX = (Math.random() * 0.2 - 0.1);
+        ctx.transform(1, 0, skewX, 1, 0, 0);
+
+        ctx.fillText(char, 0, 0);
+        ctx.restore();
+      }
+
+      // 6. Final subtle foreground scratches
+      for (let i = 0; i < 2; i++) {
+        ctx.strokeStyle = 'rgba(30, 41, 59, 0.25)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * width, Math.random() * height);
+        ctx.lineTo(Math.random() * width, Math.random() * height);
+        ctx.stroke();
+      }
+    };
+
+    const resetCaptcha = () => {
+      currentCaptchaCode = generateCaptchaCode(6);
+      drawCaptcha();
+      if (captchaInput) {
+        captchaInput.value = '';
+        captchaInput.classList.remove('invalid');
+      }
+      if (captchaError) {
+        captchaError.textContent = '';
+      }
+    };
+
+    // Initialize CAPTCHA immediately
+    resetCaptcha();
+
+    // Event listeners for Refresh & Request New CAPTCHA
+    if (captchaRefreshBtn) {
+      captchaRefreshBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        captchaRefreshBtn.classList.add('rotating');
+        setTimeout(() => captchaRefreshBtn.classList.remove('rotating'), 350);
+        resetCaptcha();
+      });
+    }
+
+    if (captchaRequestLink) {
+      captchaRequestLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        resetCaptcha();
+      });
+    }
+
+    // Toggle "(what is this?)" info box
+    if (captchaInfoBtn && captchaInfoBox) {
+      captchaInfoBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isHidden = captchaInfoBox.hasAttribute('hidden');
+        if (isHidden) {
+          captchaInfoBox.removeAttribute('hidden');
+          captchaInfoBtn.setAttribute('aria-expanded', 'true');
+        } else {
+          captchaInfoBox.setAttribute('hidden', '');
+          captchaInfoBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 
     let isSubmitting = false;
 
     const clearErrors = () => {
-      [nameInput, emailInput, subjectInput, messageInput].forEach(input => {
+      [nameInput, emailInput, subjectInput, messageInput, captchaInput].forEach(input => {
         if (input) input.classList.remove('invalid');
       });
-      [nameError, emailError, subjectError, messageError].forEach(error => {
+      [nameError, emailError, subjectError, messageError, captchaError].forEach(error => {
         if (error) error.textContent = '';
       });
     };
 
     // Real-time error removal on input
-    [nameInput, emailInput, subjectInput, messageInput].forEach(input => {
+    [nameInput, emailInput, subjectInput, messageInput, captchaInput].forEach(input => {
       if (input) {
         input.addEventListener('input', () => {
           input.classList.remove('invalid');
@@ -335,7 +518,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const rawEmail = emailInput ? emailInput.value.trim() : '';
       const rawSubject = subjectInput ? subjectInput.value.trim() : '';
       const rawMessage = messageInput ? messageInput.value.trim() : '';
-      const honeypot = honeypotInput ? honeypotInput.value : '';
+      const rawCaptcha = captchaInput ? captchaInput.value.trim() : '';
+      const honeypot = honeypotInput ? honeypotInput.value.trim() : '';
+      const elapsedMs = Date.now() - formStartTime;
 
       let isValid = true;
 
@@ -395,6 +580,22 @@ document.addEventListener('DOMContentLoaded', () => {
         isValid = false;
       }
 
+      // Validate CAPTCHA (case-insensitive)
+      if (!rawCaptcha || rawCaptcha.toUpperCase() !== currentCaptchaCode.toUpperCase()) {
+        if (captchaInput) {
+          captchaInput.classList.add('invalid');
+          captchaInput.value = '';
+          captchaInput.focus();
+        }
+        if (captchaError) {
+          captchaError.textContent = "The CAPTCHA text doesn't match. Please try again.";
+        }
+        // Regenerate CAPTCHA for retry
+        currentCaptchaCode = generateCaptchaCode(6);
+        drawCaptcha();
+        isValid = false;
+      }
+
       if (!isValid) {
         return;
       }
@@ -417,7 +618,10 @@ document.addEventListener('DOMContentLoaded', () => {
             email: rawEmail,
             subject: rawSubject,
             message: rawMessage,
-            _hp_website: honeypot
+            website: honeypot,
+            _hp_website: honeypot,
+            formStartTime: formStartTime,
+            elapsedMs: elapsedMs
           })
         });
 
@@ -425,6 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (response.ok && data.success) {
           contactForm.reset();
+          resetCaptcha();
           showToast('Message sent successfully. Thanks for reaching out!', 'success');
         } else {
           // Display actual error returned by /api/contact

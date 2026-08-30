@@ -1,5 +1,38 @@
 import nodemailer from 'nodemailer';
 
+// In-Memory Sliding Window Rate Limiter (Per warm serverless container instance)
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes window
+const MAX_REQUESTS_PER_WINDOW = 5; // Max 5 submissions per 15 minutes per IP
+
+function checkRateLimit(ip) {
+  if (!ip) return false;
+  const now = Date.now();
+  const record = rateLimitMap.get(ip) || { count: 0, firstRequest: now };
+
+  // Reset window if expired
+  if (now - record.firstRequest > RATE_LIMIT_WINDOW_MS) {
+    record.count = 1;
+    record.firstRequest = now;
+    rateLimitMap.set(ip, record);
+    return false;
+  }
+
+  record.count += 1;
+  rateLimitMap.set(ip, record);
+
+  // Periodic cleanup to avoid memory leak
+  if (rateLimitMap.size > 1000) {
+    for (const [key, val] of rateLimitMap.entries()) {
+      if (now - val.firstRequest > RATE_LIMIT_WINDOW_MS) {
+        rateLimitMap.delete(key);
+      }
+    }
+  }
+
+  return record.count > MAX_REQUESTS_PER_WINDOW;
+}
+
 /**
  * Vercel Serverless Function: /api/contact
  * Handles contact form submissions and delivers emails to muralicodex@gmail.com via Nodemailer and Gmail SMTP.
@@ -15,6 +48,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    // 2. Parse Request Body
     let body = req.body;
     if (typeof body === 'string') {
       try {
@@ -23,17 +57,53 @@ export default async function handler(req, res) {
         body = {};
       }
     }
-    const { name, email, subject, message, _hp_website } = body || {};
+    const { name, email, subject, message, website, _hp_website, formStartTime, elapsedMs } = body || {};
 
-    // 2. Honeypot Spam Protection (Silently accept & drop bot submissions)
-    if (_hp_website && typeof _hp_website === 'string' && _hp_website.trim().length > 0) {
-      return res.status(200).json({
-        success: true,
-        message: 'Message sent successfully. Thanks for reaching out!'
+    // 3. Honeypot Anti-Spam Check (Reject immediately if filled)
+    const honeypot = (website || _hp_website || '').trim();
+    if (honeypot.length > 0) {
+      console.warn('[Anti-Spam] Honeypot field filled. Rejection triggered.');
+      return res.status(400).json({
+        success: false,
+        error: 'Spam submission detected.'
       });
     }
 
-    // 3. Server-side Input Validation & Trimming
+    // 4. Minimum Submission Timing Check (Reject if submitted under 3 seconds)
+    const MIN_SUBMISSION_TIME_MS = 3000; // 3 seconds
+    const MAX_SUBMISSION_TIME_MS = 24 * 60 * 60 * 1000; // 24 hours
+    const now = Date.now();
+    const parsedStartTime = Number(formStartTime);
+    const parsedElapsed = Number(elapsedMs);
+
+    if (parsedStartTime && !isNaN(parsedStartTime)) {
+      const serverElapsed = now - parsedStartTime;
+      if (serverElapsed < MIN_SUBMISSION_TIME_MS || serverElapsed > MAX_SUBMISSION_TIME_MS) {
+        console.warn(`[Anti-Spam] Timing check failed. Server elapsed: ${serverElapsed}ms`);
+        return res.status(400).json({
+          success: false,
+          error: 'Spam submission detected.'
+        });
+      }
+    } else if (parsedElapsed && !isNaN(parsedElapsed) && parsedElapsed < MIN_SUBMISSION_TIME_MS) {
+      console.warn(`[Anti-Spam] Client elapsed time too fast: ${parsedElapsed}ms`);
+      return res.status(400).json({
+        success: false,
+        error: 'Spam submission detected.'
+      });
+    }
+
+    // 5. Basic Rate Limiting
+    const clientIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket?.remoteAddress || '';
+    if (checkRateLimit(clientIp)) {
+      console.warn(`[Rate Limit] Client IP ${clientIp} exceeded submission rate limit.`);
+      return res.status(429).json({
+        success: false,
+        error: 'Too many requests. Please wait a few minutes before submitting again.'
+      });
+    }
+
+    // 6. Server-side Input Validation & Trimming
     const trimmedName = typeof name === 'string' ? name.trim() : '';
     const trimmedEmail = typeof email === 'string' ? email.trim() : '';
     const trimmedSubject = typeof subject === 'string' ? subject.trim() : '';
