@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGradCobra" cx="50%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#2a0808" />
+      <stop offset="60%" stop-color="#140404" />
+      <stop offset="100%" stop-color="#070202" />
+    </radialGradient>
+    <linearGradient id="fireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff2a00" />
+      <stop offset="45%" stop-color="#ff7700" />
+      <stop offset="80%" stop-color="#ffc400" />
+      <stop offset="100%" stop-color="#fff2a8" />
+    </linearGradient>
+    <linearGradient id="metalCobra" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3a3838" />
+      <stop offset="50%" stop-color="#1e1c1d" />
+      <stop offset="100%" stop-color="#111011" />
+    </linearGradient>
+    <linearGradient id="goldCobra" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d4af37" />
+      <stop offset="50%" stop-color="#ffe277" />
+      <stop offset="100%" stop-color="#aa8010" />
+    </linearGradient>
+    <filter id="glowCobra" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Background with Hex grid -->
+  <rect width="400" height="400" fill="url(#bgGradCobra)" />
+  <g opacity="0.08" stroke="#ff4500" stroke-width="1">
+    <path d="M 0,50 L 400,50 M 0,100 L 400,100 M 0,150 L 400,150 M 0,200 L 400,200 M 0,250 L 400,250 M 0,300 L 400,300 M 0,350 L 400,350" />
+    <path d="M 50,0 L 50,400 M 100,0 L 100,400 M 150,0 L 150,400 M 200,0 L 200,400 M 250,0 L 250,400 M 300,0 L 300,400 M 350,0 L 350,400" />
+  </g>
+
+  <!-- Fiery Energy Aura -->
+  <circle cx="200" cy="190" r="120" fill="#ff3700" opacity="0.15" filter="url(#glowCobra)" />
+  <path d="M 90 220 Q 150 120 220 160 Q 300 110 340 180 Q 280 230 200 210 Q 140 250 90 220 Z" fill="url(#fireGrad)" opacity="0.25" filter="url(#glowCobra)" />
+
+  <!-- MP40 Weapon Body -->
+  <!-- Barrel & Shroud -->
+  <rect x="45" y="175" width="155" height="20" rx="3" fill="url(#metalCobra)" stroke="#ff4500" stroke-width="2" />
+  <rect x="30" y="179" width="20" height="12" rx="2" fill="#ff4500" filter="url(#glowCobra)" />
+  <line x1="60" y1="185" x2="180" y2="185" stroke="#ff8c00" stroke-width="3" stroke-dasharray="8,6" />
+
+  <!-- Cobra Head Shroud / Upper Receiver -->
+  <path d="M 180 155 Q 225 125 275 150 Q 310 170 300 205 L 245 215 L 185 200 Z" fill="#2d0505" stroke="url(#goldCobra)" stroke-width="2.5" />
+  <path d="M 215 145 Q 245 132 265 148 Q 285 162 280 185 L 245 190 Z" fill="#6b0d0d" stroke="#ff3700" stroke-width="1.5" />
+  
+  <!-- Glowing Cobra Eyes -->
+  <circle cx="252" cy="155" r="5" fill="#00ffff" filter="url(#glowCobra)" />
+  <circle cx="253" cy="155" r="2.5" fill="#ffffff" />
+  <path d="M 230 160 Q 255 175 285 170" stroke="url(#fireGrad)" stroke-width="3" fill="none" />
+
+  <!-- Straight Box Magazine (Vertical Underneath) -->
+  <polygon points="188,195 210,195 220,295 198,295" fill="#151518" stroke="url(#fireGrad)" stroke-width="2.5" />
+  <line x1="204" y1="205" x2="214" y2="285" stroke="#ff4500" stroke-width="2" />
+
+  <!-- Pistol Grip -->
+  <path d="M 252 205 L 285 280 L 260 288 L 232 210 Z" fill="#2a0606" stroke="url(#goldCobra)" stroke-width="2" />
+  <line x1="262" y1="225" x2="272" y2="270" stroke="#ff8c00" stroke-width="2" />
+
+  <!-- Wire Folding Stock -->
+  <path d="M 290 190 L 360 185 Q 375 185 378 198 L 375 230 L 358 230" stroke="#d4af37" stroke-width="4" stroke-linecap="round" fill="none" />
+
+  <!-- Cobra Fangs Accent Graphic -->
+  <polygon points="275,178 282,192 278,178" fill="#ffffff" />
+  <polygon points="265,180 270,194 268,180" fill="#ffffff" />
+
+  <!-- Target Badge Indicator -->
+  <rect x="20" y="20" width="130" height="28" rx="6" fill="rgba(255, 69, 0, 0.25)" stroke="#ff4500" stroke-width="1.5" />
+  <text x="85" y="39" fill="#ffffff" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="13" text-anchor="middle" letter-spacing="1">MP40 COBRA</text>
+</svg>

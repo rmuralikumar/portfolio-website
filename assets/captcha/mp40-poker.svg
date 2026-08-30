@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGradPoker" cx="50%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#241038" />
+      <stop offset="70%" stop-color="#12061e" />
+      <stop offset="100%" stop-color="#06010a" />
+    </radialGradient>
+    <linearGradient id="goldPoker" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700" />
+      <stop offset="50%" stop-color="#d4af37" />
+      <stop offset="100%" stop-color="#997a15" />
+    </linearGradient>
+    <linearGradient id="royalObsidian" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2a2236" />
+      <stop offset="50%" stop-color="#16121f" />
+      <stop offset="100%" stop-color="#0a080f" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bgGradPoker)" />
+  <!-- Playing Card Suits Watermark -->
+  <g opacity="0.08" fill="#d4af37">
+    <path d="M 190,130 C 190,110 160,110 160,135 C 160,160 200,185 200,185 C 200,185 240,160 240,135 C 240,110 210,110 210,130 Z" transform="scale(0.8) translate(70, 60)" />
+  </g>
+  <!-- MP40 Barrel with Gold Inlays -->
+  <rect x="40" y="175" width="160" height="18" rx="3" fill="url(#royalObsidian)" stroke="url(#goldPoker)" stroke-width="2.5" />
+  <rect x="25" y="179" width="18" height="10" rx="2" fill="url(#goldPoker)" />
+  <circle cx="90" cy="184" r="3" fill="#ffd700" />
+  <circle cx="120" cy="184" r="3" fill="#ffd700" />
+  <circle cx="150" cy="184" r="3" fill="#ffd700" />
+  <!-- Royal Receiver with Spade Badge -->
+  <rect x="185" y="158" width="110" height="46" rx="4" fill="url(#royalObsidian)" stroke="url(#goldPoker)" stroke-width="2.5" />
+  <!-- Gold Spade Emblem -->
+  <path d="M 240,166 C 235,160 220,168 228,178 C 235,186 240,192 240,192 C 240,192 245,186 252,178 C 260,168 245,160 240,166 Z" fill="url(#goldPoker)" />
+  <polygon points="238,188 242,188 244,196 236,196" fill="url(#goldPoker)" />
+  <!-- Gold Inlaid Straight Magazine -->
+  <polygon points="194,204 218,204 228,300 204,300" fill="url(#royalObsidian)" stroke="url(#goldPoker)" stroke-width="2.5" />
+  <line x1="210" y1="214" x2="220" y2="290" stroke="url(#goldPoker)" stroke-width="2" />
+  <!-- Ornate Grip -->
+  <polygon points="256,206 288,284 262,292 234,208" fill="#38184c" stroke="url(#goldPoker)" stroke-width="2" />
+  <circle cx="260" cy="245" r="4" fill="#ffd700" />
+  <!-- Royal Gold Stock -->
+  <path d="M 295 185 L 365 185 Q 380 185 380 198 L 376 235 L 352 235" stroke="url(#goldPoker)" stroke-width="4" stroke-linecap="round" fill="none" />
+  <!-- Target Badge Indicator -->
+  <rect x="20" y="20" width="130" height="28" rx="6" fill="rgba(212, 175, 55, 0.2)" stroke="#ffd700" stroke-width="1.5" />
+  <text x="85" y="39" fill="#ffd700" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="13" text-anchor="middle" letter-spacing="1">MP40 POKER</text>
+</svg>

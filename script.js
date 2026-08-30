@@ -298,170 +298,297 @@ document.addEventListener('DOMContentLoaded', () => {
     const subjectError = document.getElementById('subject-error');
     const messageError = document.getElementById('message-error');
 
-    // CAPTCHA Elements
-    const captchaCanvas = document.getElementById('captcha-canvas');
-    const captchaInput = document.getElementById('captcha-input');
-    const captchaError = document.getElementById('captcha-error');
+    // CAPTCHA Elements (Modern 3x3 Image Selection Widget)
+    const captchaCard = document.getElementById('captcha-card');
+    const captchaGrid = document.getElementById('captcha-image-grid');
+    const captchaCounterBadge = document.getElementById('captcha-counter-badge');
     const captchaRefreshBtn = document.getElementById('captcha-refresh-btn');
-    const captchaRequestLink = document.getElementById('captcha-request-link');
+    const captchaVerifyBtn = document.getElementById('captcha-verify-btn');
+    const captchaError = document.getElementById('captcha-error');
     const captchaInfoBtn = document.getElementById('captcha-info-btn');
     const captchaInfoBox = document.getElementById('captcha-info-box');
 
-    let currentCaptchaCode = '';
-    const CHAR_SET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+    let isCaptchaVerified = false;
+    let currentGridTiles = [];
 
-    const generateCaptchaCode = (length = 6) => {
-      let code = '';
-      for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * CHAR_SET.length);
-        code += CHAR_SET[randomIndex];
+    // Sound Synthesizer for Interactive Feedback
+    const playCaptchaTone = (freq, type, duration, vol = 0.12) => {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        // Audio optional / silent fallback
       }
-      return code;
     };
 
-    const drawCaptcha = () => {
-      if (!captchaCanvas) return;
-      const ctx = captchaCanvas.getContext('2d');
-      if (!ctx) return;
+    // Item Pool: MP40 Variants (Targets)
+    const mp40Pool = [
+      {
+        id: 'mp40-cobra',
+        name: 'MP40 - Predatory Cobra',
+        isTarget: true,
+        label: 'MP40 Cobra',
+        image: 'assets/captcha/mp40-cobra.png'
+      },
+      {
+        id: 'mp40-classic',
+        name: 'MP40 - Classic Tactical Steel',
+        isTarget: true,
+        label: 'MP40 Classic',
+        image: 'assets/captcha/mp40-classic.png'
+      },
+      {
+        id: 'mp40-poker',
+        name: 'MP40 - Royal Flush Spade',
+        isTarget: true,
+        label: 'MP40 Poker',
+        image: 'assets/captcha/mp40-poker.png'
+      }
+    ];
 
-      const width = 400;
-      const height = 70;
-      const dpr = window.devicePixelRatio || 1;
+    // Item Pool: Distractors (Battle Royale Non-MP40 Items)
+    const distractorPool = [
+      {
+        id: 'survivor-avatar',
+        name: 'Battle Royale Survivor',
+        isTarget: false,
+        label: 'Survivor Avatar',
+        image: 'assets/captcha/survivor-avatar.png'
+      },
+      {
+        id: 'cast-iron-pan',
+        name: 'Cast Iron Frying Pan',
+        isTarget: false,
+        label: 'Cast Iron Pan',
+        image: 'assets/captcha/cast-iron-pan.png'
+      },
+      {
+        id: 'awm-sniper',
+        name: 'AWM - Arctic Sniper',
+        isTarget: false,
+        label: 'AWM Sniper',
+        image: 'assets/captcha/awm-sniper.png'
+      },
+      {
+        id: 'field-medkit',
+        name: 'Military Field Medkit',
+        isTarget: false,
+        label: 'Field Medkit',
+        image: 'assets/captcha/field-medkit.png'
+      },
+      {
+        id: 'm416-glacier',
+        name: 'M416 - Glacier Ice Skin',
+        isTarget: false,
+        label: 'M416 Glacier',
+        image: 'assets/captcha/m416-glacier.png'
+      },
+      {
+        id: 'level-3-helmet',
+        name: 'Level 3 Spetsnaz Helmet',
+        isTarget: false,
+        label: 'Level 3 Helmet',
+        image: 'assets/captcha/level-3-helmet.png'
+      }
+    ];
 
-      captchaCanvas.width = width * dpr;
-      captchaCanvas.height = height * dpr;
-      if (ctx.resetTransform) {
-        ctx.resetTransform();
+    // Fisher-Yates Array Shuffle Algorithm
+    const shuffleArray = (array) => {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    };
+
+    // Update Counter text and styling & Enable/Disable Verify Button
+    const updateCaptchaCounter = () => {
+      if (!captchaCounterBadge) return;
+      const selectedCount = currentGridTiles.filter(t => t.selected).length;
+      captchaCounterBadge.textContent = `${selectedCount} selected`;
+
+      if (selectedCount === 3) {
+        captchaCounterBadge.classList.add('is-three');
+        if (captchaVerifyBtn && !isCaptchaVerified) {
+          captchaVerifyBtn.disabled = false;
+        }
       } else {
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-      }
-      ctx.scale(dpr, dpr);
-
-      // 1. Clean White Background
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, width, height);
-
-      // 2. Subtle light background grid lines
-      for (let i = 0; i < 4; i++) {
-        ctx.strokeStyle = `rgba(226, 232, 240, ${Math.random() * 0.7 + 0.3})`;
-        ctx.lineWidth = Math.random() * 1.5 + 1;
-        ctx.beginPath();
-        ctx.moveTo(Math.random() * width, Math.random() * height);
-        ctx.bezierCurveTo(
-          Math.random() * width, Math.random() * height,
-          Math.random() * width, Math.random() * height,
-          Math.random() * width, Math.random() * height
-        );
-        ctx.stroke();
-      }
-
-      // 3. Random noise speckles / dots
-      const dotCount = 70;
-      for (let i = 0; i < dotCount; i++) {
-        const x = Math.random() * width;
-        const y = Math.random() * height;
-        const radius = Math.random() * 1.4 + 0.6;
-        const isDark = Math.random() > 0.45;
-        ctx.fillStyle = isDark ? `rgba(15, 23, 42, ${Math.random() * 0.45 + 0.25})` : `rgba(148, 163, 184, ${Math.random() * 0.5 + 0.2})`;
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // 4. Random 2-4 distortion interference lines across the text
-      const lineCount = Math.floor(Math.random() * 3) + 2;
-      const lineColors = [
-        'rgba(30, 41, 59, 0.55)',
-        'rgba(15, 23, 42, 0.6)',
-        'rgba(51, 65, 85, 0.5)',
-        'rgba(71, 85, 105, 0.45)'
-      ];
-      for (let i = 0; i < lineCount; i++) {
-        ctx.strokeStyle = lineColors[Math.floor(Math.random() * lineColors.length)];
-        ctx.lineWidth = Math.random() * 1.5 + 1.2;
-        ctx.beginPath();
-        ctx.moveTo(Math.random() * 30, Math.random() * height);
-        ctx.bezierCurveTo(
-          Math.random() * (width * 0.35), Math.random() * height,
-          Math.random() * (width * 0.75), Math.random() * height,
-          width - Math.random() * 30, Math.random() * height
-        );
-        ctx.stroke();
-      }
-
-      // 5. Draw 6 Dark Characters with rotations, font variations, and distortion
-      const code = currentCaptchaCode;
-      const charFonts = ['Arial', 'Verdana', 'Georgia', 'Trebuchet MS', 'Impact', 'Courier New'];
-      const charColors = ['#0a0a0c', '#18181b', '#0f172a', '#1e293b', '#1e1b4b', '#27272a'];
-
-      // Usable width leaves room on right for the refresh button overlay
-      const usableWidth = 295;
-      const startX = 25;
-      const charSpacing = usableWidth / code.length;
-
-      for (let i = 0; i < code.length; i++) {
-        const char = code[i];
-        const font = charFonts[Math.floor(Math.random() * charFonts.length)];
-        const fontSize = Math.floor(Math.random() * 6) + 30; // 30px - 35px
-        const color = charColors[Math.floor(Math.random() * charColors.length)];
-        const rotationAngle = (Math.random() * 0.5 - 0.25); // ~ -14deg to +14deg
-        const x = startX + (i * charSpacing) + (Math.random() * 6 - 3);
-        const y = 46 + (Math.random() * 8 - 4);
-
-        ctx.save();
-        ctx.font = `bold ${fontSize}px ${font}, sans-serif`;
-        ctx.fillStyle = color;
-        ctx.textBaseline = 'alphabetic';
-        ctx.translate(x, y);
-        ctx.rotate(rotationAngle);
-
-        const skewX = (Math.random() * 0.2 - 0.1);
-        ctx.transform(1, 0, skewX, 1, 0, 0);
-
-        ctx.fillText(char, 0, 0);
-        ctx.restore();
-      }
-
-      // 6. Final subtle foreground scratches
-      for (let i = 0; i < 2; i++) {
-        ctx.strokeStyle = 'rgba(30, 41, 59, 0.25)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(Math.random() * width, Math.random() * height);
-        ctx.lineTo(Math.random() * width, Math.random() * height);
-        ctx.stroke();
+        captchaCounterBadge.classList.remove('is-three');
+        if (captchaVerifyBtn && !isCaptchaVerified) {
+          captchaVerifyBtn.disabled = true;
+        }
       }
     };
 
-    const resetCaptcha = () => {
-      currentCaptchaCode = generateCaptchaCode(6);
-      drawCaptcha();
-      if (captchaInput) {
-        captchaInput.value = '';
-        captchaInput.classList.remove('invalid');
+    // Reset Verification State
+    const resetVerificationState = () => {
+      isCaptchaVerified = false;
+      if (captchaVerifyBtn) {
+        captchaVerifyBtn.textContent = 'VERIFY';
+        captchaVerifyBtn.classList.remove('verified');
+        const selectedCount = currentGridTiles.filter(t => t.selected).length;
+        captchaVerifyBtn.disabled = selectedCount !== 3;
       }
-      if (captchaError) {
-        captchaError.textContent = '';
+      if (captchaCard) {
+        captchaCard.classList.remove('verified');
       }
     };
 
-    // Initialize CAPTCHA immediately
-    resetCaptcha();
+    // Initialize/Randomize the 3x3 CAPTCHA Grid
+    const generateCaptchaGrid = () => {
+      if (!captchaGrid) return;
+      captchaGrid.innerHTML = '';
+      resetVerificationState();
 
-    // Event listeners for Refresh & Request New CAPTCHA
+      // 1. Pick 3 distinct random MP40 variants
+      const shuffledMP40 = shuffleArray(mp40Pool).slice(0, 3);
+
+      // 2. Pick 6 distinct random distractors
+      const shuffledDistractors = shuffleArray(distractorPool).slice(0, 6);
+
+      // 3. Combine and shuffle across all 9 slots randomly (Do NOT hardcode positions!)
+      const combinedItems = shuffleArray([...shuffledMP40, ...shuffledDistractors]);
+
+      currentGridTiles = combinedItems.map((item, index) => ({
+        ...item,
+        gridIndex: index,
+        selected: false
+      }));
+
+      // Render 9 Tiles
+      currentGridTiles.forEach((tile, index) => {
+        const tileBtn = document.createElement('button');
+        tileBtn.type = 'button';
+        tileBtn.className = 'captcha-tile';
+        tileBtn.id = `captcha-tile-${index}`;
+        tileBtn.setAttribute('role', 'checkbox');
+        tileBtn.setAttribute('aria-checked', 'false');
+        tileBtn.setAttribute('aria-label', `${tile.name}`);
+
+        tileBtn.innerHTML = `
+          <div class="tile-visual-wrapper">
+            <img class="captcha-tile-img" src="${tile.image}" alt="${tile.name}" loading="eager" decoding="async" onerror="this.parentElement.parentElement.classList.add('has-error')" />
+            <div class="tile-fallback-view" aria-hidden="true">
+              <span>⚠️ Image Missing</span>
+              <small>${tile.label}</small>
+            </div>
+            <span class="tile-badge-label">${tile.label}</span>
+          </div>
+          <div class="tile-checkmark-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+        `;
+
+        tileBtn.addEventListener('click', () => {
+          toggleTile(index);
+        });
+
+        captchaGrid.appendChild(tileBtn);
+      });
+
+      updateCaptchaCounter();
+      if (captchaError) captchaError.textContent = '';
+    };
+
+    // Toggle Individual Tile Selection
+    const toggleTile = (index) => {
+      const tile = currentGridTiles[index];
+      if (!tile) return;
+
+      tile.selected = !tile.selected;
+      const tileBtn = document.getElementById(`captcha-tile-${index}`);
+      if (tileBtn) {
+        tileBtn.classList.toggle('selected', tile.selected);
+        tileBtn.setAttribute('aria-checked', tile.selected ? 'true' : 'false');
+        tileBtn.setAttribute('aria-label', `${tile.name}${tile.selected ? ', selected' : ''}`);
+      }
+
+      playCaptchaTone(tile.selected ? 580 : 420, 'sine', 0.06, 0.1);
+      updateCaptchaCounter();
+
+      // If user toggles tiles after verifying, require re-verification
+      if (isCaptchaVerified) {
+        resetVerificationState();
+      }
+
+      if (captchaError) captchaError.textContent = '';
+    };
+
+    // Verify Selection Handler
+    const verifyCaptchaSelection = () => {
+      const selectedTargets = currentGridTiles.filter(t => t.isTarget && t.selected).length;
+      const selectedNonTargets = currentGridTiles.filter(t => !t.isTarget && t.selected).length;
+      const totalSelected = currentGridTiles.filter(t => t.selected).length;
+
+      // Exactly all 3 MP40 tiles and 0 distractors
+      if (selectedTargets === 3 && selectedNonTargets === 0 && totalSelected === 3) {
+        isCaptchaVerified = true;
+        playCaptchaTone(523.25, 'triangle', 0.12, 0.15);
+        setTimeout(() => playCaptchaTone(659.25, 'triangle', 0.15, 0.15), 90);
+        setTimeout(() => playCaptchaTone(783.99, 'triangle', 0.22, 0.2), 180);
+
+        if (captchaVerifyBtn) {
+          captchaVerifyBtn.textContent = 'VERIFIED ✓';
+          captchaVerifyBtn.classList.add('verified');
+          captchaVerifyBtn.disabled = false;
+        }
+        if (captchaCard) {
+          captchaCard.classList.add('verified');
+        }
+        if (captchaError) {
+          captchaError.textContent = '';
+        }
+        return true;
+      } else {
+        isCaptchaVerified = false;
+        playCaptchaTone(240, 'sawtooth', 0.16, 0.2);
+        if (captchaCard) {
+          captchaCard.classList.remove('shake');
+          void captchaCard.offsetWidth; // Restart CSS animation
+          captchaCard.classList.add('shake');
+        }
+        if (captchaError) {
+          if (totalSelected !== 3) {
+            captchaError.textContent = `Please select exactly 3 MP40 gun images (${totalSelected} selected).`;
+          } else {
+            captchaError.textContent = 'Incorrect selection. Please ensure only the 3 MP40 weapon skins are selected.';
+          }
+        }
+        return false;
+      }
+    };
+
+    // Initial Grid Generation
+    generateCaptchaGrid();
+
+    // Event Listeners for Controls
     if (captchaRefreshBtn) {
       captchaRefreshBtn.addEventListener('click', (e) => {
         e.preventDefault();
+        playCaptchaTone(460, 'sine', 0.08, 0.1);
         captchaRefreshBtn.classList.add('rotating');
         setTimeout(() => captchaRefreshBtn.classList.remove('rotating'), 350);
-        resetCaptcha();
+        generateCaptchaGrid();
       });
     }
 
-    if (captchaRequestLink) {
-      captchaRequestLink.addEventListener('click', (e) => {
+    if (captchaVerifyBtn) {
+      captchaVerifyBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        resetCaptcha();
+        verifyCaptchaSelection();
       });
     }
 
@@ -485,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isSubmitting = false;
 
     const clearErrors = () => {
-      [nameInput, emailInput, subjectInput, messageInput, captchaInput].forEach(input => {
+      [nameInput, emailInput, subjectInput, messageInput].forEach(input => {
         if (input) input.classList.remove('invalid');
       });
       [nameError, emailError, subjectError, messageError, captchaError].forEach(error => {
@@ -494,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Real-time error removal on input
-    [nameInput, emailInput, subjectInput, messageInput, captchaInput].forEach(input => {
+    [nameInput, emailInput, subjectInput, messageInput].forEach(input => {
       if (input) {
         input.addEventListener('input', () => {
           input.classList.remove('invalid');
@@ -518,7 +645,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const rawEmail = emailInput ? emailInput.value.trim() : '';
       const rawSubject = subjectInput ? subjectInput.value.trim() : '';
       const rawMessage = messageInput ? messageInput.value.trim() : '';
-      const rawCaptcha = captchaInput ? captchaInput.value.trim() : '';
       const honeypot = honeypotInput ? honeypotInput.value.trim() : '';
       const elapsedMs = Date.now() - formStartTime;
 
@@ -580,20 +706,15 @@ document.addEventListener('DOMContentLoaded', () => {
         isValid = false;
       }
 
-      // Validate CAPTCHA (case-insensitive)
-      if (!rawCaptcha || rawCaptcha.toUpperCase() !== currentCaptchaCode.toUpperCase()) {
-        if (captchaInput) {
-          captchaInput.classList.add('invalid');
-          captchaInput.value = '';
-          captchaInput.focus();
+      // Validate Image CAPTCHA Verification
+      if (!isCaptchaVerified) {
+        const verifiedNow = verifyCaptchaSelection();
+        if (!verifiedNow) {
+          isValid = false;
+          if (captchaCard) {
+            captchaCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
         }
-        if (captchaError) {
-          captchaError.textContent = "The CAPTCHA text doesn't match. Please try again.";
-        }
-        // Regenerate CAPTCHA for retry
-        currentCaptchaCode = generateCaptchaCode(6);
-        drawCaptcha();
-        isValid = false;
       }
 
       if (!isValid) {
@@ -629,7 +750,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (response.ok && data.success) {
           contactForm.reset();
-          resetCaptcha();
+          generateCaptchaGrid();
           showToast('Message sent successfully. Thanks for reaching out!', 'success');
         } else {
           // Display actual error returned by /api/contact

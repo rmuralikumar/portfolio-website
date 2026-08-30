@@ -33,7 +33,7 @@
   <!-- Google Fonts Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
@@ -978,35 +978,56 @@
                   <span class="error-msg" id="message-error" aria-live="polite"></span>
                 </div>
 
-                <!-- CAPTCHA Security Check Section -->
-                <div class="captcha-section">
+                <!-- Custom CAPTCHA Security Check Section -->
+                <div class="captcha-section" id="captcha-section">
                   <div class="captcha-header">
                     <span class="captcha-title">CAPTCHA Security check</span>
                     <button type="button" class="captcha-link-btn" id="captcha-info-btn" aria-expanded="false" aria-controls="captcha-info-box">(what is this?)</button>
                   </div>
                   
                   <div class="captcha-info-box" id="captcha-info-box" role="region" aria-label="CAPTCHA explanation" hidden>
-                    <p>This security check helps verify that this message is submitted by a human rather than an automated spam bot.</p>
+                    <p>Select all 3 matching images for the requested item to verify you are human before sending your message.</p>
                   </div>
 
-                  <div class="captcha-box">
-                    <div class="captcha-display-wrapper">
-                      <canvas id="captcha-canvas" class="captcha-canvas" width="400" height="70" role="img" aria-label="Visual CAPTCHA security code"></canvas>
-                      <button type="button" class="captcha-refresh-btn" id="captcha-refresh-btn" aria-label="Refresh CAPTCHA" title="Refresh CAPTCHA">
-                        <svg class="captcha-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                          <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8M22 12.5a10 10 0 0 1-18.8 4.3L2.5 16"/>
-                        </svg>
-                        <span>Refresh</span>
-                      </button>
+                  <!-- Modern Image-Selection CAPTCHA Card -->
+                  <div class="captcha-card" id="captcha-card" role="group" aria-labelledby="captcha-challenge-title">
+                    <!-- Blue Header Section -->
+                    <div class="captcha-card-header">
+                      <span class="captcha-prompt-text">Select all images with</span>
+                      <strong class="captcha-target-name" id="captcha-challenge-title">MP40</strong>
+                      <span class="captcha-subtext">Click verify once all 3 matching images are selected.</span>
                     </div>
 
-                    <label for="captcha-input" class="sr-only">Enter the text you see on the image</label>
-                    <input type="text" id="captcha-input" name="captcha" class="form-input captcha-input" placeholder="Enter the text you see on the image" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                    <!-- 3x3 Dynamic Image Grid -->
+                    <div class="captcha-grid-container">
+                      <div class="captcha-image-grid" id="captcha-image-grid" role="group" aria-label="CAPTCHA image selection grid">
+                        <!-- 9 randomized tiles rendered dynamically by JavaScript -->
+                      </div>
+                    </div>
+
+                    <!-- Card Footer Controls -->
+                    <div class="captcha-card-footer">
+                      <div class="captcha-footer-left">
+                        <button type="button" class="captcha-action-btn" id="captcha-refresh-btn" aria-label="Refresh challenge" title="Get a new challenge">
+                          <svg class="captcha-footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.19"/>
+                          </svg>
+                          <span>REFRESH</span>
+                        </button>
+                      </div>
+
+                      <div class="captcha-footer-center">
+                        <span class="captcha-counter-badge" id="captcha-counter-badge">0 selected</span>
+                      </div>
+
+                      <div class="captcha-footer-right">
+                        <button type="button" class="captcha-verify-btn" id="captcha-verify-btn" disabled>
+                          VERIFY
+                        </button>
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="captcha-footer">
-                    <span class="captcha-footer-text">Can't see the image? <button type="button" class="captcha-link-btn captcha-request-btn" id="captcha-request-link">Request a new one</button></span>
-                  </div>
                   <span class="error-msg" id="captcha-error" aria-live="polite"></span>
                 </div>
 
