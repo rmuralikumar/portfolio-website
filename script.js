@@ -146,6 +146,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --------------------------------------------------------------------------
+  // 4b. Phone Card Keyboard Accessibility (Space key support for anchor links)
+  // --------------------------------------------------------------------------
+  const phoneCard = document.getElementById('phone-contact-card') || document.querySelector('a[href^="tel:"]');
+  if (phoneCard) {
+    phoneCard.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        phoneCard.click();
+      }
+    });
+  }
+
+  // --------------------------------------------------------------------------
   // 5. ScrollSpy (Active Navigation Link Highlighting)
   // --------------------------------------------------------------------------
   const sections = document.querySelectorAll('section[id]');

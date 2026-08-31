@@ -1526,12 +1526,24 @@ button {
   transition: all var(--transition-fast);
   cursor: pointer;
   text-decoration: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.05);
+  position: relative;
+  width: 100%;
+}
+
+.contact-method-card * {
+  pointer-events: none;
 }
 
 .contact-method-card:hover {
   border-color: #ffffff;
   background: var(--bg-card-hover);
   transform: translateX(4px);
+}
+
+.contact-method-card:active {
+  transform: scale(0.99);
 }
 
 .method-icon-box {
