@@ -199,12 +199,18 @@ export default async function handler(req, res) {
 
       const cfData = await cfResponse.json();
 
-      // Allowed hostnames: Vercel production domain, preview domains, and local dev hosts
+      // Allowed hostnames: Vercel production domain, preview domains, local dev hosts,
+      // plus any custom domains listed (comma-separated) in the ALLOWED_HOSTNAMES env var
+      const extraHostnames = (process.env.ALLOWED_HOSTNAMES || '')
+        .split(',')
+        .map(h => h.trim().toLowerCase())
+        .filter(Boolean);
       const allowedHostnames = [
         'rmuralikumar.vercel.app',
         'localhost',
         '127.0.0.1',
-        '::1'
+        '::1',
+        ...extraHostnames
       ];
 
       const rawHostname = (cfData.hostname || '').toLowerCase();
@@ -222,9 +228,18 @@ export default async function handler(req, res) {
           action: cfData.action,
           errorCodes: cfData['error-codes']
         });
+        const errorCodes = cfData['error-codes'] || [];
+        if (errorCodes.includes('invalid-input-secret') || errorCodes.includes('missing-input-secret')) {
+          console.error('[Turnstile Error] TURNSTILE_SECRET_KEY is invalid or does not match TURNSTILE_SITE_KEY.');
+          return res.status(500).json({
+            success: false,
+            error: 'Server configuration error: Turnstile verification is unavailable.'
+          });
+        }
+        // Expired, reused or malformed tokens: the client resets the widget so the user can retry
         return res.status(400).json({
           success: false,
-          error: 'Human verification failed. Please try again.'
+          error: 'Human verification failed or expired. Please verify again and retry.'
         });
       }
     } catch (cfErr) {

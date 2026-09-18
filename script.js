@@ -349,7 +349,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Wait for Cloudflare Turnstile script to load
+      // Configuration errors cannot be fixed by retrying: invalid/disabled sitekey or a
+      // hostname that is not listed in the Turnstile widget's Hostname Management (110200).
+      const isConfigError = (code) => /^(110\d{3}|400020|400070)$/.test(String(code || ''));
+      const MAX_AUTO_RETRIES = 3;
+      const SCRIPT_LOAD_TIMEOUT_MS = 10000;
+      let autoRetries = 0;
+
+      const showTurnstileMessage = (message) => {
+        if (turnstileError) turnstileError.textContent = message;
+      };
+
+      // Wait for Cloudflare Turnstile script to load (blocked scripts surface a message instead of waiting forever)
+      const waitStart = Date.now();
       const renderWidget = () => {
         if (window.turnstile && typeof window.turnstile.render === 'function') {
           if (turnstileWidgetId !== null) return;
@@ -359,23 +371,47 @@ document.addEventListener('DOMContentLoaded', () => {
               action: 'contact-form',
               theme: 'dark',
               size: 'normal',
+              retry: 'never', // retries are handled in error-callback so config errors (e.g. 110200) don't loop
+              'refresh-expired': 'auto',
               callback: (token) => {
                 activeTurnstileToken = token;
-                if (turnstileError) turnstileError.textContent = '';
+                autoRetries = 0;
+                showTurnstileMessage('');
                 if (turnstileGroup) turnstileGroup.classList.remove('has-error');
               },
               'expired-callback': () => {
+                // Token expired before submit: clear it and let Turnstile fetch a fresh one
                 activeTurnstileToken = '';
-                if (turnstileError) turnstileError.textContent = 'Verification expired. Please verify again.';
+                showTurnstileMessage('Verification expired. Please verify again.');
+                resetTurnstileWidget();
               },
-              'error-callback': () => {
+              'timeout-callback': () => {
                 activeTurnstileToken = '';
-                if (turnstileError) turnstileError.textContent = 'Human verification encountered an issue. Please refresh.';
+                resetTurnstileWidget();
+              },
+              'error-callback': (errorCode) => {
+                activeTurnstileToken = '';
+                console.warn('[Turnstile] error-callback code:', errorCode, '| host:', window.location.hostname);
+                if (isConfigError(errorCode)) {
+                  showTurnstileMessage('Human verification is unavailable on this domain. Please email muralicodex@gmail.com directly.');
+                } else if (autoRetries < MAX_AUTO_RETRIES) {
+                  autoRetries += 1;
+                  showTurnstileMessage('Verification hit a snag. Retrying...');
+                  setTimeout(resetTurnstileWidget, 1500 * autoRetries);
+                } else {
+                  showTurnstileMessage('Human verification could not complete. Please refresh the page or disable content blockers for this site.');
+                }
+                // Returning true tells Turnstile the error was handled (no extra console noise)
+                return true;
               }
             });
           } catch (err) {
             console.error('[Turnstile Render Error]:', err);
+            showTurnstileMessage('Human verification could not load. Please refresh the page.');
           }
+        } else if (Date.now() - waitStart > SCRIPT_LOAD_TIMEOUT_MS) {
+          console.warn('[Turnstile] challenges.cloudflare.com/turnstile/v0/api.js did not load (blocked by network, extension or CSP?).');
+          showTurnstileMessage('Human verification could not load. Disable content blockers for this site or refresh the page.');
         } else {
           setTimeout(renderWidget, 100);
         }
