@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let siteKey = widgetContainer.getAttribute('data-sitekey') || window.TURNSTILE_SITE_KEY || '';
 
-      // If siteKey is not hardcoded, fetch it from the backend configuration endpoint
+      // If siteKey is not hardcoded, fetch it from the configuration endpoint
       if (!siteKey) {
         try {
           const configRes = await fetch('/api/contact', {
