@@ -1,54 +1,86 @@
-# Personal Portfolio Website — Murali Kumar R
+# Murali Kumar R — Portfolio
 
-A premium, modern, responsive developer portfolio website built with pure **HTML5**, **CSS3**, and **Vanilla JavaScript** (no external UI framework dependencies).
+Personal portfolio of **Murali Kumar R**, Web Developer & WordPress Developer.
+Live at **https://rmuralikumar.vercel.app**.
 
----
+Built with **Next.js 16 (App Router)**, **React 19** and **TypeScript**. There is no database:
+all content lives in typed data files, and the contact form sends email over SMTP.
 
-## 👨‍💻 Developer Information
+## Features
 
-* **Name**: Murali Kumar R
-* **Role**: Web Developer | WordPress Developer
-* **Phone**: `9943321131`
-* **Email**: [muralicodex@gmail.com](mailto:muralicodex@gmail.com)
-* **LinkedIn**: [linkedin.com/in/rmuralikumar](https://www.linkedin.com/in/rmuralikumar/)
-* **GitHub**: [github.com/rmuralikumar](https://github.com/rmuralikumar)
+- **Selected Projects**: category filter (All, Web Apps, Websites, WordPress), project cards with
+  live-site links, and an in-place detail view with shareable links (`/?project=<slug>`), browser
+  Back/Esc support and Previous/Next navigation. Projects can show an optional demo video.
+- **Contact form**: shared client/server validation, honeypot, timing and rate-limit checks, and
+  Cloudflare Turnstile verified on the server. Turnstile only loads when the form is near the viewport.
+- **Performance**: static prerendering, self-hosted fonts (`next/font`), optimized responsive images
+  (`next/image`, WebP with blur placeholders), lazy third-party scripts.
+- **SEO**: metadata, canonical URL, generated Open Graph image, JSON-LD (Person, WebSite, projects),
+  `sitemap.xml` and `robots.txt`.
+- **Accessibility**: WCAG 2.2 AA checked: keyboard support everywhere, visible focus, skip link,
+  focus-trapped mobile menu, AA colour contrast, 44px touch targets, reduced-motion support.
 
----
+## Getting started
 
-## 🚀 Key Features
+Requires Node.js 20.9 or newer.
 
-* **Zero Frontend Frameworks**: Pure semantic HTML5, modern CSS3 variables/Grid/Flexbox, and vanilla ES6+ JavaScript.
-* **Modern Dark Luxury Aesthetic**: High-contrast dark palette, subtle gradient glows, ambient lighting, frosted glass cards, and micro-interactions.
-* **All 9 Dedicated Sections**:
-  1. **Sticky Navigation** with desktop links, CTA button, and animated mobile drawer.
-  2. **Hero Section** with live status indicator, large typography, and interactive floating code elements.
-  3. **About Section** with biography, key milestones, and interactive tech badge profile card.
-  4. **Technical Skills** organized across 6 categorized cards with custom SVG icons.
-  5. **Selected Projects** (E-Commerce, Agency, and Gym websites) with preview mockups, feature lists, and action buttons.
-  6. **Education** timeline card for *B.Com (Computer Applications)* from *Thanthai Hans Roever College (Autonomous)*, Bharathidasan University.
-  7. **Certifications** with 3 editable placeholder cards.
-  8. **Contact Section** with direct phone/email cards and client-side validated contact form with feedback notifications.
-  9. **Footer** with branding, navigation links, and dynamic copyright.
-* **Responsive Across All Screen Sizes**: Tailored breakpoints for desktop (1440px+), laptop (1024px), tablet (768px), and mobile devices (480px, 375px).
-* **Accessibility**: Keyboard navigable, visible focus states, ARIA landmarks and controls, skip-to-content link, and `prefers-reduced-motion` support.
-
----
-
-## 📁 File Structure
-
-```text
-portfolio/
-├── index.html       # Semantic HTML5 markup and structural content
-├── style.css        # CSS custom properties, grid layouts, animations & media queries
-├── script.js        # Vanilla JS for navbar scroll, mobile menu, animations, and form validation
-├── Prompt.md        # Original project brief & specifications
-├── agent.md         # AGENTS guidance & implementation rules
-└── README.md        # Project documentation
+```bash
+npm install
+cp .env.example .env   # then fill in real values
+npm run dev            # http://localhost:3000
 ```
 
----
+| Script              | What it does                          |
+| ------------------- | ------------------------------------- |
+| `npm run dev`       | Development server (Turbopack)        |
+| `npm run build`     | Production build                      |
+| `npm start`         | Serve the production build            |
+| `npm run lint`      | ESLint (Next.js + accessibility rules) |
+| `npm run typecheck` | TypeScript check                      |
 
-## 🌐 How to Run
+## Environment variables
 
-1. Simply double-click or open `index.html` in any modern web browser (Google Chrome, Microsoft Edge, Firefox, Safari, etc.).
-2. No build tools, Node.js, or local servers required.
+See [.env.example](.env.example). Set the same names in Vercel (Production and Preview) and redeploy.
+
+| Name                   | Used for                                              |
+| ---------------------- | ----------------------------------------------------- |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD` | Gmail SMTP (use a Google App Password) |
+| `CONTACT_EMAIL`        | Inbox that receives contact messages                  |
+| `TURNSTILE_SITE_KEY`   | Public Turnstile key, embedded at build time          |
+| `TURNSTILE_SECRET_KEY` | Server-side Turnstile verification                    |
+| `ALLOWED_HOSTNAMES`    | Optional extra domains for the Turnstile hostname check |
+
+## Editing content
+
+| What                                     | Where                     |
+| ---------------------------------------- | ------------------------- |
+| Projects (order, text, tags, links)      | `src/data/projects.ts`    |
+| Project screenshots                      | `src/assets/projects/`    |
+| Skills, services, learning, education    | `src/data/content.ts`     |
+| Name, email, phone, social links         | `src/data/site.ts`        |
+| Styles                                   | `src/app/globals.css`     |
+
+### Adding a project demo video
+
+1. Put the file in `public/videos/`, for example `public/videos/timebus.mp4`
+   (H.264 MP4, about 1280px wide, under 5 MB, 10–20 seconds, no audio needed).
+2. Add `video: "/videos/timebus.mp4"` to that project in `src/data/projects.ts`.
+
+The video plays muted and looped in the project's detail view, only while visible, with pause and
+mute buttons. Without a `video` entry the screenshot is shown.
+
+## Project structure
+
+```text
+src/
+├── app/            # layout, page, API route, metadata files (OG image, sitemap, robots, icon)
+├── components/     # layout (header, footer), sections, projects, contact
+├── data/           # site, projects and section content
+├── lib/            # shared contact-form validation
+└── assets/         # project screenshots (optimized by next/image)
+```
+
+## Deployment
+
+Deployed on Vercel (framework preset: Next.js, set in `vercel.json`). Pushing to the production
+branch deploys automatically once the environment variables above are set.
